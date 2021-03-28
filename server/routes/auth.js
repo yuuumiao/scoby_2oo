@@ -6,38 +6,37 @@ const User = require("../models/User");
 const salt = 10;
 
 router.post("/signin", (req, res, next) => {
+  console.log("reqBody", req.body)
   const { email, password } = req.body;
-  User.findOne({ email })
-    .then((userDocument) => {
-      // If userDocument is null, it means that no user with the given email was found in the DB.
-      // if you want your users to sign in with their username you can apply the same logic,
-      // just be careful to set the username as unique when defining the schema.
-      if (!userDocument) {
-        // Status 400 for bad request.
-        return res.status(400).json({ message: "Invalid credentials" }); // Send a general message so hackers don't know if the email or the password were incorrect.
-      }
-      const isValidPassword = bcrypt.compareSync(
-        password,
-        userDocument.password
-      );
-      // compareSync returns a boolean, if the password is not valid, send a general message so hackers don't know if the email or the password were incorrect.
-      if (!isValidPassword) {
-        return res.status(400).json({ message: "Invalid credentials" });
-      }
-      req.session.currentUser = userDocument._id;
-      // userDocument is a mongodb document, we cannot mutate it but every document has a .toObject().
-      const userObj = userDocument.toObject();
-      // userObj is now an object, we can no delete the password before setting it in the session and sending the user to the frontend.
-      delete userObj.password;
-      res.status(200).json(userObj);
-    })
-    .catch((error) => {
-      res.status(500).json(error);
-    });
+  User
+  .findOne({ email })
+  .then((userDocument) => {
+    if (!userDocument) {
+      return res.status(400).json({ message: "Invalid credentials" }); // Send a general message so hackers don't know if the email or the password were incorrect.
+    }
+    const isValidPassword = bcrypt.compareSync(
+      password,
+      userDocument.password
+    )
+    // compareSync returns a boolean, if the password is not valid, send a general message so hackers don't know if the email or the password were incorrect.
+    if (!isValidPassword) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    req.session.currentUser = userDocument._id; // only store user's id in session.
+    // userDocument is a mongodb document, we cannot mutate it but every document has a .toObject().
+    const userObj = userDocument.toObject();
+    // userObj is now an object, we can no delete the password before setting it in the session and sending the user to the frontend.
+    delete userObj.password;
+    res.status(200).json(userObj);
+  })
+  .catch((error) => {
+    res.status(500).json(error);
+  });
 });
 
 router.post("/signup", (req, res, next) => {
   const { email, password, firstName, lastName } = req.body;
+  console.log("body"), req.body
 
   User.findOne({ email })
     .then((userDocument) => {
@@ -55,6 +54,7 @@ router.post("/signup", (req, res, next) => {
           password: hashedPassword,
         };
 
+        // console.log(newUser);
         User.create(newUser).then((newUserDocument) => {
           /** Down below this logs the user on signup.
            *  If you do not want this behaviour you could just send a 201 status

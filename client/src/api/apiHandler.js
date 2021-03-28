@@ -2,7 +2,8 @@ import axios from "axios";
 
 const service = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
-  withCredentials: true, // Cookie is sent to client when using this service. (used for session)
+  withCredentials: true, 
+  // Cookie is sent to client when using this service. (used for session)
 });
 
 function errorHandler(error) {
@@ -10,6 +11,7 @@ function errorHandler(error) {
     console.log(error.response && error.response.data);
     throw error;
   }
+  // console.log(error)
   throw error;
 }
 
@@ -44,10 +46,33 @@ export default {
       .catch(errorHandler);
   },
 
-  getItems() {
+  getItems(data) {
     return service
       .get("/api/items")
       .then((res) => res.data)
       .catch(errorHandler);
   },
+
+  createItems(data){
+    // console.log(data)
+    return service
+      .post("/api/items", data)
+      .then((res) => res.data)
+      .catch(errorHandler);  
+  },
+
+  getUserInfo(){
+    return service
+    .get("api/users/me")
+    .then((res) => res.data)
+    .catch(errorHandler);
+  },
+
+  updatePhoneNumber(data){
+    return service
+    .patch("/api/users/me", data)
+    .then((res) => res.data)
+    .catch(errorHandler);  
+  }
+
 };

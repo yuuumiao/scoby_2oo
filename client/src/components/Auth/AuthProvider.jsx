@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import apiHandler from "../../api/apiHandler";
+import { withRouter } from "react-router-dom";
 
 export const AuthContext = React.createContext();
 

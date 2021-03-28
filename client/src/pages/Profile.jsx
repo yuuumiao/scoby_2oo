@@ -3,13 +3,34 @@ import { Link } from "react-router-dom";
 import { withUser } from "../components/Auth/withUser";
 import "../styles/Profile.css";
 import "../styles/CardItem.css";
+
+import apiHandler from "./../api/apiHandler"
+
 class Profile extends Component {
+
+  state = {
+    phoneNumber: ""
+  }
+
+  handleChange = (event) => {
+    this.setState({ phoneNumber: event.target.value })
+  }
+
+  addPhoneNumber = (event) => {
+    event.preventDefault();
+    apiHandler.updatePhoneNumer({ phoneNumber: this.state.phoneNumber })
+  }
+
+
   render() {
     const { authContext } = this.props;
     const { user } = authContext;
 
     return (
       <div style={{ padding: "100px", fontSize: "1.25rem" }}>
+        {/* <pre>{JSON.stringify(this.props, null, 2)}</pre> */}
+
+
         <h2 style={{ fontSize: "1.5rem", marginBottom: "10px" }}>
           This is profile, it's protected !
         </h2>
@@ -42,7 +63,7 @@ class Profile extends Component {
           <div className="user-contact">
             <h4>Add a phone number</h4>
 
-            <form className="form">
+            <form className="form" onSubmit={this.addPhoneNumber}>
               <div className="form-group">
                 <label className="label" htmlFor="phoneNumber">
                   Phone number
@@ -53,6 +74,7 @@ class Profile extends Component {
                   type="text"
                   name="phoneNumber"
                   placeholder="Add phone number"
+                  onChange={this.handleChange}
                 />
               </div>
               <button className="form__button">Add phone number</button>

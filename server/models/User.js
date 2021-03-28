@@ -12,12 +12,14 @@ const userSchema = new Schema({
   email: String,
   password: String,
   city: String,
-  contact: {
-    type: Schema.Types.ObjectId,
-    ref: "Contact",
-  },
+  // contact: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: "Contact",
+  // },
+  phoneNumber: String
+
 });
 
-const User = mongoose.model("User", userSchema);
 
+const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -12,6 +12,7 @@ class FormSignup extends Component {
       event.target.type === "file" ? event.target.files[0] : event.target.value;
 
     const key = event.target.name;
+    // console.log("key->", key, "value->", value)
 
     this.setState({ [key]: value });
   };
@@ -21,8 +22,14 @@ class FormSignup extends Component {
     const { authContext } = this.props;
 
     apiHandler
-      .signup(this.state)
+      .signup({
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email, 
+        password:this.state.password
+      })
       .then((data) => {
+        // console.log(data)
         authContext.setUser(data);
         this.props.history.push("/");
       })
@@ -46,7 +53,6 @@ class FormSignup extends Component {
         <form
           autoComplete="off"
           className="form"
-          onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         >
           <h2 className="title">Create account</h2>
@@ -60,6 +66,8 @@ class FormSignup extends Component {
               id="firstName"
               type="text"
               name="firstName"
+              onChange={this.handleChange}
+
             />
           </div>
 
@@ -72,6 +80,8 @@ class FormSignup extends Component {
               id="lastName"
               type="text"
               name="lastName"
+              onChange={this.handleChange}
+
             />
           </div>
 
@@ -79,11 +89,13 @@ class FormSignup extends Component {
             <label className="label" htmlFor="email">
               Email
             </label>
-            <input className="input" id="email" type="email" name="email" />
+            <input className="input" id="email" type="email" name="email" 
+                      onChange={this.handleChange}
+ />
           </div>
 
           <div className="form-group">
-            <label className="label" htmlFor="password">
+            <label className="label" htmlFor="password" >
               Password
             </label>
             <input
@@ -91,6 +103,8 @@ class FormSignup extends Component {
               id="password"
               type="password"
               name="password"
+              onChange={this.handleChange}
+
             />
           </div>
 

@@ -39,6 +39,9 @@ class FormSignin extends Component {
   };
 
   render() {
+
+    // console.log("props",this.props)
+
     return (
       <section className="form-section">
         <header className="header">
