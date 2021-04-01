@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthContext } from "./AuthProvider";
+import UserContext from "./UserContext";
 
 // This is what we call a HOC (Higher Order Component).
 // It takes a component as a parameter and it returns a component.
@@ -20,14 +20,13 @@ import { AuthContext } from "./AuthProvider";
 // export default withUser(YourComponent)
 // ----------------^ your component now has access to the user context defined in AuthProvider.jsx.
 
-export const withUser = (ComponentToPassUserContextTo) => {
-  return function (props) {
-    return (
-      <AuthContext.Consumer>
-        {(context) => (
-          <ComponentToPassUserContextTo {...props} authContext={context} />
-        )}
-      </AuthContext.Consumer>
-    );
-  };
+
+const withUser = (ComponentToExposeContextTo) => (props) => {
+  return (
+    <UserContext.Consumer>
+      {(context) => <ComponentToExposeContextTo {...props} context={context} />}
+    </UserContext.Consumer>
+  );
 };
+
+export default withUser;

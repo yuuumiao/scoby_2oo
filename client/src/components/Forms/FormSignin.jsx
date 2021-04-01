@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { withUser } from "../Auth/withUser";
-import { withRouter } from "react-router-dom";
+//import { withUser } from "../Auth/withUser";
+//import { withRouter } from "react-router-dom";
+import UserContext from "../Auth/UserContext";
 import apiHandler from "../../api/apiHandler";
 import "../../styles/form.css";
 
 class FormSignin extends Component {
+  static contextType = UserContext;
+
   state = {};
 
   handleChange = (event) => {
@@ -24,12 +27,12 @@ class FormSignin extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { authContext } = this.props;
+    const { UserContext } = this.props;
 
     apiHandler
       .signin(this.state)
       .then((data) => {
-        authContext.setUser(data);
+        UserContext.setUser(data);
         this.props.history.push("/");
       })
       .catch((error) => {
@@ -94,4 +97,4 @@ class FormSignin extends Component {
   }
 }
 
-export default withRouter(withUser(FormSignin)); // Browser history and user will be given as props to the FormSignin thanks to HOCs !
+export default FormSignin; // Browser history and user will be given as props to the FormSignin thanks to HOCs !

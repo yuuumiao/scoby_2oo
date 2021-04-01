@@ -1,30 +1,72 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { withUser } from "../components/Auth/withUser";
+import withUser from "../components/Auth/withUser";
+import UserContext from "../components/Auth/UserContext";
+import apiHandler from "./../api/apiHandler"
+import CardItem from "../components/Items/CardItem"
 import "../styles/Profile.css";
 import "../styles/CardItem.css";
 
-import apiHandler from "./../api/apiHandler"
 
 class Profile extends Component {
+  static contextType = UserContext;
 
   state = {
-    phoneNumber: ""
+    phoneNumber: "",
+    httpResponse: null,
+    selectedItem: null,
+    userItems: [],
+  }
+
+
+  componentDidMount(){
+    this.setState({phoneNumber: this.context.user.phoneNumber})
   }
 
   handleChange = (event) => {
-    this.setState({ phoneNumber: event.target.value })
+    this.setState({ phoneNumber: event.target.value})
   }
 
   addPhoneNumber = (event) => {
-    event.preventDefault();
-    apiHandler.updatePhoneNumer({ phoneNumber: this.state.phoneNumber })
-  }
+    event.preventDefault(); 
+    const { httpResponse, userItems, selectedItem, ...userData } = this.state;
+    console.log(userData)
+
+    apiHandler
+      //.updateUserInfos(userData)
+      .updateUserInfos({
+        phoneNumber: this.state.phoneNumber
+      })
+      .then((data) => {
+        this.context.setUser(data);
+        this.setState({
+          httpResponse: { status: "success", message: "Phone number added." },
+        });
+        this.timeoutId = setTimeout(() => {
+          this.setState({ httpResponse: null });
+        }, 1000);
+      })
+      .catch((error) => {
+        this.setState({
+          httpResponse: {
+            status: "failure",
+            message: "An error occured, try again later",
+          },
+        });
+        this.timeoutId = setTimeout(() => {
+          this.setState({ httpResponse: null });
+        }, 1000);
+      });
+  };
+  
 
 
   render() {
-    const { authContext } = this.props;
-    const { user } = authContext;
+
+    //console.log(this.props)
+    const { user } = this.context;
+
+    //console.log(user)
 
     return (
       <div style={{ padding: "100px", fontSize: "1.25rem" }}>
@@ -74,10 +116,11 @@ class Profile extends Component {
                   type="text"
                   name="phoneNumber"
                   placeholder="Add phone number"
+                  value={this.state.phoneNumber}
                   onChange={this.handleChange}
                 />
               </div>
-              <button className="form__button">Add phone number</button>
+              <button className="form__button">{this.state.phoneNumber? "Change phone number":"Add phone number"}</button> 
             </form>
           </div>
 
@@ -91,30 +134,9 @@ class Profile extends Component {
             </div>
           </div>
 
-          <div className="CardItem">
-            <h3>Your items</h3>
-            <div className="item">
-              <div className="round-image">
-                <img
-                  src="https://vignette.wikia.nocookie.net/simpsons/images/1/14/Ralph_Wiggum.png/revision/latest/top-crop/width/360/height/360?cb=20100704163100"
-                  alt="item"
-                />
-              </div>
-              <div className="description">
-                <h2>Name of item</h2>
-                <h4>Quantity: 1 </h4>
-                <p>Description of the item</p>
-                <div className="buttons">
-                  <span>
-                    <button className="btn-secondary">Delete</button>
-                  </span>
-                  <span>
-                    <button className="btn-primary">Edit</button>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+      <CardItem />
+
+
         </section>
       </div>
     );

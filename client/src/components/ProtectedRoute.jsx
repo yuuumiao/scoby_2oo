@@ -1,15 +1,28 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { withUser } from "../components/Auth/withUser";
+import UserContext from "./Auth/UserContext";
 
-const ProtectedRoute = ({ component: Component, authContext, ...rest }) => {
-  if (authContext.isLoading) {
-    return null;
-  } else if (authContext.isLoggedIn) {
-    return <Route {...rest} render={(props) => <Component {...props} />} />;
-  } else {
-    return <Redirect to="/signin" />;
-  }
-};
+function ProtectedRoute({ component: Component, render, ...rest }) {
+  return (
+    <UserContext.Consumer>
+      {(context) => {
+        if (context.isLoading) {
+          return <div>Loading ...</div>;
+        }
+        if (context.isLoggedIn) {
+          return (
+            <React.Fragment>
+              {/* If render prop is used instead of the component prop when calling ProtectedRoute (emulates <Route/> render method.*/}
+              {render && <Route {...rest} render={render} />}
+              {!render && <Route {...rest} component={Component} />}
+            </React.Fragment>
+          );
+        } else {
+          return <Redirect to="/signin" />;
+        }
+      }}
+    </UserContext.Consumer>
+  );
+}
 
-export default withUser(ProtectedRoute);
+export default ProtectedRoute;

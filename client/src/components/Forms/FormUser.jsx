@@ -1,25 +1,21 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { withUser } from "../Auth/withUser";
-
-
 import apiHandler from "../../api/apiHandler";
-import { AuthContext } from "../Auth/AuthProvider"
+import UserContext from "../Auth/UserContext";
 import "../../styles/form.css";
 
 
 class FormUser extends Component {
+    static contextType = UserContext;
 
     state = {
-
         user: null,
-        // tmpUrl: "",
+        tmpUrl: "",
         httpResponse: null,
         isLoading: true,
     }
 
 
-    static contextType = AuthContext;
     imageRef = React.createRef();
 
 
@@ -80,6 +76,7 @@ class FormUser extends Component {
         const { httpResponse } = this.state;
         // console.log(this.state.httpResponse)
         //it always return null ?? => why ?
+        console.log(this.props)
         if (this.state.isLoading) return <div>Loading...</div>;
 
         return (
@@ -153,4 +150,4 @@ class FormUser extends Component {
 
 
 
-export default withUser(FormUser);
+export default FormUser;

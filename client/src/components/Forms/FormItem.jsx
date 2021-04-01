@@ -4,7 +4,7 @@ import "../../styles/form.css";
 
 import apiHandler from "../../api/apiHandler"
 import { withRouter } from "react-router-dom";
-import { AuthContext } from "../Auth/AuthProvider"
+import UserContext from "../Auth/UserContext";
 
 class ItemForm extends Component {
   state = {
@@ -18,7 +18,7 @@ class ItemForm extends Component {
   };
 
 
-  static contextType = AuthContext; 
+  static contextType = UserContext; 
   // Subscribe to the context from a class
   imageRef = React.createRef();
 

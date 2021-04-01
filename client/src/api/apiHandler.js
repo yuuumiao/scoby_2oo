@@ -68,7 +68,7 @@ export default {
     .catch(errorHandler);
   },
 
-  updatePhoneNumber(data){
+  updateUserInfos(data){
     return service
     .patch("/api/users/me", data)
     .then((res) => res.data)
