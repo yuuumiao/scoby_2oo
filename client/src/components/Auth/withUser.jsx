@@ -18,7 +18,7 @@ import UserContext from "./UserContext";
 // ... your implementation.
 //
 // export default withUser(YourComponent)
-// ----------------^ your component now has access to the user context defined in AuthProvider.jsx.
+// ----------------^ your component now has access to the user context defined in UserProvider.jsx.
 
 
 const withUser = (ComponentToExposeContextTo) => (props) => {

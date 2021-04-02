@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component, Redirect } from "react";
+import { Link, useHistory} from "react-router-dom";
 //import { withUser } from "../Auth/withUser";
-//import { withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
 import apiHandler from "../../api/apiHandler";
 import "../../styles/form.css";
@@ -13,8 +13,6 @@ class FormSignin extends Component {
 
   handleChange = (event) => {
     const key = event.target.name;
-
-    // You can test more if you have to handle different sorts of inputs.
     const value =
       event.target.type === "file"
         ? event.target.files[0]
@@ -27,23 +25,32 @@ class FormSignin extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { UserContext } = this.props;
 
     apiHandler
       .signin(this.state)
       .then((data) => {
-        UserContext.setUser(data);
+        this.context.setUser(data);
+        console.log(this.props)
         this.props.history.push("/");
       })
       .catch((error) => {
         console.log(error);
-        // Display error message here, if you set the state
       });
   };
 
   render() {
 
-    // console.log("props",this.props)
+    // if (this.context.isLoggedIn) {
+    //   // This logic is the same as in the <ProtectedRoute /> component
+    //   // Here this is handled within the component, if there are some views
+    //   // that are not meant to be rendered to a logged in user,
+    //   // you could make a generic component out of it, just like <ProtectedRoute />
+    //   // and instead of checking if the user is not logged in, check if the user is logged in
+    //   // and redirect him to whatever page you want, in the case below: the home page.
+
+    //   return <Redirect to="/" />;
+    // }
+    //console.log(this.props)
 
     return (
       <section className="form-section">
@@ -97,4 +104,5 @@ class FormSignin extends Component {
   }
 }
 
-export default FormSignin; // Browser history and user will be given as props to the FormSignin thanks to HOCs !
+export default withRouter(FormSignin); 
+// Browser history and user will be given as props to the FormSignin thanks to HOCs !

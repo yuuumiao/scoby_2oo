@@ -63,10 +63,7 @@ class Profile extends Component {
 
   render() {
 
-    //console.log(this.props)
     const { user } = this.context;
-
-    //console.log(user)
 
     return (
       <div style={{ padding: "100px", fontSize: "1.25rem" }}>

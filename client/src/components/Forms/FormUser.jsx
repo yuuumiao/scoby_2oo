@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import apiHandler from "../../api/apiHandler";
-import UserContext from "../Auth/UserContext";
+//import UserContext from "../Auth/UserContext";
+import withUser from "../Auth/withUser";
+
 import "../../styles/form.css";
 
 
 class FormUser extends Component {
-    static contextType = UserContext;
+    //static contextType = UserContext;
+    //if using the withUser HOF, then static... is no more needed to access the UserContext
 
     state = {
         user: null,
@@ -15,23 +18,9 @@ class FormUser extends Component {
         isLoading: true,
     }
 
-
     imageRef = React.createRef();
+    //Refs are created using React.createRef() and attached to React elements via the ref attribute. 
 
-
-    handleSubmit = (event) => {
-        event.preventDefault()
-        const fd = new FormData()
-
-        for (const key in this.state.user) {
-            if (key === "profileImg") continue;
-            fd.append(key, this.state.user[key])
-        }
-
-        if (this.imageRef.current.files[0]) {
-            fd.append("profileImg", this.imageRef.current.files[0]);
-        }
-    }
 
     handleChange = (event) => {
         const key = event.target.name;
@@ -48,7 +37,50 @@ class FormUser extends Component {
     }
 
 
+    handleSubmit = (event) => {
+        event.preventDefault()
+        const fd = new FormData()
+
+        for (const key in this.state.user) {
+            if (key === "profileImg") continue;
+            fd.append(key, this.state.user[key])
+        }
+        // if (this.imageRef.current.files[0]) {
+        //     fd.append("profileImg", this.imageRef.current.files[0]);
+        // }
+        //console.log(this.state.user)
+        apiHandler
+            .updateUserInfos(this.state.user)
+            .then((data) => {//update the context
+                //console.log(data,this.props.context)
+                this.props.context.setUser(data);
+                this.setState({
+                    httpResponse: {
+                    status: "success",
+                    message: "Profile successfully updated.",
+                    }});
+                this.timeoutId = setTimeout(() => {
+                        this.setState({ httpResponse: null });
+                      }, 2000);
+                     })
+            .catch((error) => {
+                this.setState({
+                  httpResponse: {
+                    status: "failure",
+                    message:
+                      "Something bad happened while updating your profile, try again later",
+                  },
+                });
+        
+                this.timeoutId = setTimeout(() => {
+                  this.setState({ httpResponse: null });
+                }, 2000);
+              });
+    }
+
+
     componentDidMount() {
+
         apiHandler
             .getUserInfo()
             .then((data) => {
@@ -76,7 +108,7 @@ class FormUser extends Component {
         const { httpResponse } = this.state;
         // console.log(this.state.httpResponse)
         //it always return null ?? => why ?
-        console.log(this.props)
+       // console.log(this.props)
         if (this.state.isLoading) return <div>Loading...</div>;
 
         return (
@@ -88,6 +120,13 @@ class FormUser extends Component {
                     onChange={this.handleChange}
                 >
                     <h2 className="title">Edit profile</h2>
+
+                    <div className="round-image user-image">
+                        <img
+                        src={this.state.tmpUrl || this.state.user.profileImg}
+                        alt={this.state.user.firstName}
+                        />
+                    </div>
 
 
                     {/* ref={this.imageRef} */}
@@ -150,4 +189,4 @@ class FormUser extends Component {
 
 
 
-export default FormUser;
+export default withUser(FormUser);

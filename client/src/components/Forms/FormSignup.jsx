@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter, Redirect} from "react-router-dom";
-import  withUser  from "../Auth/withUser";
+//import  withUser  from "../Auth/withUser";
 import UserContext from "../Auth/UserContext";
 import apiHandler from "../../api/apiHandler";
 import "../../styles/form.css";
@@ -12,16 +12,13 @@ class FormSignup extends Component {
   handleChange = (event) => {
     const value =
       event.target.type === "file" ? event.target.files[0] : event.target.value;
-
-    const key = event.target.name;
+      const key = event.target.name;
     // console.log("key->", key, "value->", value)
-
     this.setState({ [key]: value });
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
-   // const { UserContext } = this.props;
 
     apiHandler
       .signup({
@@ -32,7 +29,7 @@ class FormSignup extends Component {
       })
       .then((data) => {
         // console.log(data)
-        UserContext.setUser(data);
+        this.context.setUser(data);
         this.props.history.push("/");
       })
       .catch((error) => {
@@ -41,15 +38,16 @@ class FormSignup extends Component {
   };
 
   render() {
-    if (this.context.isLoggedIn) {
-      // This logic is the same as in the <ProtectedRoute /> component
-      // Here this is handled within the component, if there are some views
-      // that are not meant to be rendered to a logged in user,
-      // you could make a generic component out of it, just like <ProtectedRoute />
-      // and instead of checking if the user is not logged in, check if the user is logged in
-      // and redirect him to whatever page you want, in the case below: the home page.
-      return <Redirect to="/" />;
-    }
+    // if (this.context.isLoggedIn) {
+    //   // This logic is the same as in the <ProtectedRoute /> component
+    //   // Here this is handled within the component, if there are some views
+    //   // that are not meant to be rendered to a logged in user,
+    //   // you could make a generic component out of it, just like <ProtectedRoute />
+    //   // and instead of checking if the user is not logged in, check if the user is logged in
+    //   // and redirect him to whatever page you want, in the case below: the home page.
+    //   return <Redirect to="/" />;
+    // }
+
     return (
       <section className="form-section">
         <header className="header">
@@ -133,4 +131,4 @@ class FormSignup extends Component {
   }
 }
 
-export default FormSignup;
+export default withRouter(FormSignup);
