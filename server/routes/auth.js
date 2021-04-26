@@ -6,7 +6,7 @@ const User = require("../models/User");
 const salt = 10;
 
 router.post("/signin", (req, res, next) => {
-  console.log("reqBody", req.body)
+  //console.log("reqBody", req.body)
   const { email, password } = req.body;
   User
   .findOne({ email })

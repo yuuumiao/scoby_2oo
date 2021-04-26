@@ -1,39 +1,57 @@
 import React from "react";
+import AppMap from "../components/AppMap";
+import ItemDisplay from "../components/Items/ItemDisplay";
+import ItemForm from "../components/Items/ItemForm";
+import UserContext from "../components/Auth/UserContext";
+import apiHandler from "../api/apiHandler";
 
-import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+class Home extends React.Component {
+  static contextType = UserContext;
+  state = {
+    selectedItem: null,
+    items: [],
+  };
 
-const Home = (props) => {
-  // Implement react map box here.
-  const Map = ReactMapboxGl({
-    accessToken: process.env.REACT_APP_MAPBOX_TOKEN
-  });
-  return (
-    <div>
-      <h1>MAPBOX MAP HERE</h1>
-      <p>On home /</p>
+  componentDidMount() {
+    apiHandler.getItems().then((data) => {
+      this.setState({ items: data });
+    });
+  }
 
+  addItem = (item) => {
+    this.setState({ items: [...this.state.items, item] });
+  };
 
-      <Map
-        style="mapbox://styles/mapbox/streets-v9"
-        containerStyle={{
-          height: '100vh',
-          width: '100vw'
-        }}
-        >
-          {/* <Layer type="symbol" id="marker" layout={{ 'icon-image': 'marker-15' }}>
-            <Feature coordinates={[-0.481747846041145, 51.3233379650232]} />
-          </Layer> */}
+  onSelectItem = (selectedItem) => {
+    this.setState({ selectedItem: selectedItem });
+  };
 
-  
-<Marker
-  coordinates={[-0.2416815, 51.5285582]}
-  anchor="bottom">
-  <img src="#"/>
-</Marker>
-      </Map>;
-    </div>
-  );
-};
+  handleClose = () => {
+    this.setState({ selectedItem: null });
+  };
+
+  render() {
+    const { user } = this.context;
+
+    return (
+      <React.Fragment>
+        {user && this.props.displayForm && (
+          <ItemForm
+            handleClose={this.props.handleFormClose}
+            addItem={this.addItem}
+          />
+        )}
+        {this.state.selectedItem !== null && (
+          <ItemDisplay
+            item={this.state.selectedItem}
+            handleClose={this.handleClose}
+          />
+        )}
+        <AppMap items={this.state.items} handleSelectItem={this.onSelectItem} />
+      </React.Fragment>
+    );
+  }
+}
 
 export default Home;
+
