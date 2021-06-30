@@ -34,7 +34,9 @@ class Home extends React.Component {
     const { user } = this.context;
 
     return (
-      <React.Fragment>
+      <div>
+        <h1>home page</h1>
+
         {user && this.props.displayForm && (
           <ItemForm
             handleClose={this.props.handleFormClose}
@@ -48,8 +50,7 @@ class Home extends React.Component {
           />
         )}
         <AppMap items={this.state.items} handleSelectItem={this.onSelectItem} />
-        {/* <AppMap /> */}
-      </React.Fragment>
+      </div>
     );
   }
 }

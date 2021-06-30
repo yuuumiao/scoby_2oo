@@ -1,5 +1,5 @@
 import React from "react";
-import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl";
+import ReactMapboxGl, { Marker } from "react-mapbox-gl";
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
@@ -13,18 +13,6 @@ const Map = ReactMapboxGl({
 // Add images for use in layout with prop icon-image. The value should be the imageKey string of the tuple.
 // Alternatively, use mapbox studio to upload the image, it will be fetched with the map style object. (see map.addImage options for the tuple options).
 
-const kombuchaImg = new Image(20, 30);
-kombuchaImg.src = "/media/kombucha.svg";
-
-const kefirImg = new Image(20, 30);
-kefirImg.src = "/media/kefir.svg";
-
-const vinegarImg = new Image(20, 30);
-vinegarImg.src = "/media/vinegar.svg";
-
-const plantImg = new Image(20, 30);
-plantImg.src = "/media/plant.svg";
-
 class AppMap extends React.PureComponent {
   state = {
     lng: 2.349014, // Default lng and lat set to the center of paris.
@@ -32,117 +20,71 @@ class AppMap extends React.PureComponent {
     zoom: 12, // used for map zoom level
   };
 
-  // componentDidMount() {
-  //   // Get users geo location and set it as the state so the map centers relative to the users current location. :)
-  //   const success = (position) => {
-  //     const latitude = position.coords.latitude;
-  //     const longitude = position.coords.longitude;
-  //     this.setState({ lat: latitude, lng: longitude });
-  //   };
+  componentDidMount() {
+    // Get users geo location and set it as the state so the map centers relative to the users current location. :)
+    const success = (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      this.setState({ lat: latitude, lng: longitude });
+    };
 
-  //   const error = () => {
-  //     console.log("An error occured geolocating user");
-  //   };
+    const error = () => {
+      console.log("An error occured geolocating user");
+    };
 
-  //   if (!navigator.geolocation) {
-  //     console.log("Geolocation not supported");
-  //   } else {
-  //     navigator.geolocation.getCurrentPosition(success, error);
-  //   }
-  // }
+    if (!navigator.geolocation) {
+      console.log("Geolocation not supported");
+    } else {
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  }
 
   handleClick = (selectedItem) => {
     // Pass the selectedItem back to the parent.
     this.props.handleSelectItem(selectedItem);
   };
 
+  filterAndProductMarkersByCategroy = (arg) => {
+    const Arg = arg.slice(0, 1).toUpperCase() + arg.slice(1).toLowerCase();
+    return this.props.items
+      .filter((item) => item.category[0] === Arg)
+      .map((p) => (
+        <Marker
+          key={p._id}
+          onClick={(event) => this.handleClick()}
+          coordinates={p.location.coordinates}
+        >
+          <button>
+            <img src={`/media/${arg}.svg`} alt={`${arg}-marker`} />
+          </button>
+        </Marker>
+      ));
+  };
+
   render() {
-    const kombuchas = this.props.items.filter(
-      (item) => item.category[0] === "Kombucha"
-    );
-
-    const vinegars = this.props.items.filter(
-      (item) => item.category[0] === "Vinegar"
-    );
-
-    const plants = this.props.items.filter(
-      (item) => item.category[0] === "Plant"
-    );
-
-    console.log("plants", plants);
-
-    // const kefirs = this.props.items.filter(
-    //   (item) => item.category[0] === "Kefir"
+    // const kombuchas = this.props.items.filter(
+    //   (item) => item.category[0] === "Kombucha"
     // );
 
-    // const vinegarLayer = (
-    //   <Layer
-    //     type="symbol"
-    //     id="vinegars"
-    //     images={["vinegar-icon", vinegarImg]}
-    //     layout={{ "icon-image": "vinegar-icon" }}
+    // const vinegars = this.props.items.filter(
+    //   (item) => item.category[0] === "Vinegar"
+    // );
+
+    // const plants = this.props.items.filter(
+    //   (item) => item.category[0] === "Plant"
+    // );
+    // const plantsMarkers = plants.map((p) => (
+    //   <Marker
+    //     key={p._id}
+    //     onClick={(event) => this.handleClick()}
+    //     coordinates={p.location.coordinates}
     //   >
-    //     {vinegars.map((item, index) => (
-    //       <Feature
-    //         key={index}
-    //         onClick={(event) => this.handleClick(item)}
-    //         coordinates={item.location.coordinates}
-    //       />
-    //     ))}
-    //   </Layer>
-    // );
-
-    // const plantLayer = (
-    //   <Layer
-    //     type="symbol"
-    //     id="plants"
-    //     images={["plant-icon", plantImg]}
-    //     layout={{ "icon-image": "plant-icon" }}
-    //   >
-    //     {plants.map((item, index) => (
-    //       <Feature
-    //         key={index}
-    //         onClick={(event) => this.handleClick(item)}
-    //         coordinates={item.location.coordinates}
-    //       />
-    //     ))}
-    //   </Layer>
-    // );
-
-    // const kombuchaLayer = (
-    //   <Layer
-    //     type="symbol"
-    //     id="kombuchas"
-    //     images={["kombucha-icon", kombuchaImg]}
-    //     layout={{ "icon-image": "kombucha-icon" }}
-    //   >
-    //     {kombuchas.map((item, index) => (
-    //       <Feature
-    //         key={index}
-    //         onClick={(event) => this.handleClick(item)}
-    //         coordinates={item.location.coordinates}
-    //       />
-    //     ))}
-    //   </Layer>
-    // );
-
-    // const kefirLayer = (
-    //   <Layer
-    //     type="symbol"
-    //     id="kefirs"
-    //     images={["kefir-icon", kefirImg]}
-    //     layout={{ "icon-image": "kefir-icon" }}
-    //   >
-    //     {kefirs.map((item, index) => (
-    //       <Feature
-    //         key={index}
-    //         onClick={(event) => this.handleClick(item)}
-    //         coordinates={item.location.coordinates}
-    //       />
-    //     ))}
-    //   </Layer>
-    // );
-
+    //     <button>
+    //       <img src="/media/plant.svg" alt="plant-marker" />
+    //     </button>
+    //   </Marker>
+    // ));
+    const plantsMarkers = this.filterAndProductMarkersByCategroy("plant");
     return (
       <Map
         // eslint-disable-next-line
@@ -158,25 +100,10 @@ class AppMap extends React.PureComponent {
         }}
         center={[this.state.lng, this.state.lat]}
       >
+        {plantsMarkers}
         {/* {kombuchaLayer}
         {kefirLayer}
         {vinegarLayer} */}
-        {plants.map((i) => {
-          return (
-            <Marker
-              key={i._id}
-              latitude={i.location.coordinates[0]}
-              longitude={i.location.coordinates[1]}
-              offsetLeft={-20}
-              offsetTop={-10}
-            >
-              <button>
-                <img src="/media/plant.svg" alt="mapbox-marker-plant" />
-                <p>plant</p>
-              </button>
-            </Marker>
-          );
-        })}
       </Map>
     );
   }
