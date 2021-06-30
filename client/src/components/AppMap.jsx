@@ -1,5 +1,5 @@
 import React from "react";
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl";
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
@@ -12,6 +12,7 @@ const Map = ReactMapboxGl({
 // images: [imageKey: string, image: HTMLImageElement, options: object] Also accepts array of the previous image tuple.
 // Add images for use in layout with prop icon-image. The value should be the imageKey string of the tuple.
 // Alternatively, use mapbox studio to upload the image, it will be fetched with the map style object. (see map.addImage options for the tuple options).
+
 const kombuchaImg = new Image(20, 30);
 kombuchaImg.src = "/media/kombucha.svg";
 
@@ -31,24 +32,24 @@ class AppMap extends React.PureComponent {
     zoom: 12, // used for map zoom level
   };
 
-  componentDidMount() {
-    // Get users geo location and set it as the state so the map centers relative to the users current location. :)
-    const success = (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      this.setState({ lat: latitude, lng: longitude });
-    };
+  // componentDidMount() {
+  //   // Get users geo location and set it as the state so the map centers relative to the users current location. :)
+  //   const success = (position) => {
+  //     const latitude = position.coords.latitude;
+  //     const longitude = position.coords.longitude;
+  //     this.setState({ lat: latitude, lng: longitude });
+  //   };
 
-    const error = () => {
-      console.log("An error occured geolocating user");
-    };
+  //   const error = () => {
+  //     console.log("An error occured geolocating user");
+  //   };
 
-    if (!navigator.geolocation) {
-      console.log("Geolocation not supported");
-    } else {
-      navigator.geolocation.getCurrentPosition(success, error);
-    }
-  }
+  //   if (!navigator.geolocation) {
+  //     console.log("Geolocation not supported");
+  //   } else {
+  //     navigator.geolocation.getCurrentPosition(success, error);
+  //   }
+  // }
 
   handleClick = (selectedItem) => {
     // Pass the selectedItem back to the parent.
@@ -67,77 +68,80 @@ class AppMap extends React.PureComponent {
     const plants = this.props.items.filter(
       (item) => item.category[0] === "Plant"
     );
-    const kefirs = this.props.items.filter(
-      (item) => item.category[0] === "Kefir"
-    );
 
-    const vinegarLayer = (
-      <Layer
-        type="symbol"
-        id="vinegars"
-        images={["vinegar-icon", vinegarImg]}
-        layout={{ "icon-image": "vinegar-icon" }}
-      >
-        {vinegars.map((item, index) => (
-          <Feature
-            key={index}
-            onClick={(event) => this.handleClick(item)}
-            coordinates={item.location.coordinates}
-          />
-        ))}
-      </Layer>
-    );
+    console.log("plants", plants);
 
-    const plantLayer = (
-      <Layer
-        type="symbol"
-        id="plants"
-        images={["plant-icon", plantImg]}
-        layout={{ "icon-image": "plant-icon" }}
-      >
-        {plants.map((item, index) => (
-          <Feature
-            key={index}
-            onClick={(event) => this.handleClick(item)}
-            coordinates={item.location.coordinates}
-          />
-        ))}
-      </Layer>
-    );
+    // const kefirs = this.props.items.filter(
+    //   (item) => item.category[0] === "Kefir"
+    // );
 
-    const kombuchaLayer = (
-      <Layer
-        type="symbol"
-        id="kombuchas"
-        images={["kombucha-icon", kombuchaImg]}
-        layout={{ "icon-image": "kombucha-icon" }}
-      >
-        {kombuchas.map((item, index) => (
-          <Feature
-            key={index}
-            onClick={(event) => this.handleClick(item)}
-            coordinates={item.location.coordinates}
-          />
-        ))}
-      </Layer>
-    );
+    // const vinegarLayer = (
+    //   <Layer
+    //     type="symbol"
+    //     id="vinegars"
+    //     images={["vinegar-icon", vinegarImg]}
+    //     layout={{ "icon-image": "vinegar-icon" }}
+    //   >
+    //     {vinegars.map((item, index) => (
+    //       <Feature
+    //         key={index}
+    //         onClick={(event) => this.handleClick(item)}
+    //         coordinates={item.location.coordinates}
+    //       />
+    //     ))}
+    //   </Layer>
+    // );
 
-    const kefirLayer = (
-      <Layer
-        type="symbol"
-        id="kefirs"
-        images={["kefir-icon", kefirImg]}
-        layout={{ "icon-image": "kefir-icon" }}
-      >
-        {kefirs.map((item, index) => (
-          <Feature
-            key={index}
-            onClick={(event) => this.handleClick(item)}
-            coordinates={item.location.coordinates}
-          />
-        ))}
-      </Layer>
-    );
+    // const plantLayer = (
+    //   <Layer
+    //     type="symbol"
+    //     id="plants"
+    //     images={["plant-icon", plantImg]}
+    //     layout={{ "icon-image": "plant-icon" }}
+    //   >
+    //     {plants.map((item, index) => (
+    //       <Feature
+    //         key={index}
+    //         onClick={(event) => this.handleClick(item)}
+    //         coordinates={item.location.coordinates}
+    //       />
+    //     ))}
+    //   </Layer>
+    // );
+
+    // const kombuchaLayer = (
+    //   <Layer
+    //     type="symbol"
+    //     id="kombuchas"
+    //     images={["kombucha-icon", kombuchaImg]}
+    //     layout={{ "icon-image": "kombucha-icon" }}
+    //   >
+    //     {kombuchas.map((item, index) => (
+    //       <Feature
+    //         key={index}
+    //         onClick={(event) => this.handleClick(item)}
+    //         coordinates={item.location.coordinates}
+    //       />
+    //     ))}
+    //   </Layer>
+    // );
+
+    // const kefirLayer = (
+    //   <Layer
+    //     type="symbol"
+    //     id="kefirs"
+    //     images={["kefir-icon", kefirImg]}
+    //     layout={{ "icon-image": "kefir-icon" }}
+    //   >
+    //     {kefirs.map((item, index) => (
+    //       <Feature
+    //         key={index}
+    //         onClick={(event) => this.handleClick(item)}
+    //         coordinates={item.location.coordinates}
+    //       />
+    //     ))}
+    //   </Layer>
+    // );
 
     return (
       <Map
@@ -149,15 +153,24 @@ class AppMap extends React.PureComponent {
           left: 0,
           bottom: 1,
           right: 0,
-          height: '100vh',
-          width: '100vw'
+          height: "100vh",
+          width: "100vw",
         }}
         center={[this.state.lng, this.state.lat]}
       >
-        {kombuchaLayer}
+        {/* {kombuchaLayer}
         {kefirLayer}
-        {vinegarLayer}
-        {plantLayer}
+        {vinegarLayer} */}
+        {plants.map((i) => {
+          return (
+            <Marker key={i._id} coordinates={i.location.coordinates}>
+              <button>
+                <img src="/media/plant.svg" alt="mapbox-marker-plant" />
+                <p>plant</p>
+              </button>
+            </Marker>
+          );
+        })}
       </Map>
     );
   }

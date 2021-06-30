@@ -48,10 +48,10 @@ class Home extends React.Component {
           />
         )}
         <AppMap items={this.state.items} handleSelectItem={this.onSelectItem} />
+        {/* <AppMap /> */}
       </React.Fragment>
     );
   }
 }
 
 export default Home;
-

@@ -6,10 +6,8 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
-import FormItem from "./components/Forms/FormItem"
-import FormUser from "./components/Forms/FormUser"
-
-
+import FormItem from "./components/Forms/FormItem";
+import FormUser from "./components/Forms/FormUser";
 
 function App() {
   return (
@@ -22,10 +20,6 @@ function App() {
         <Route exact path="/item/create" component={FormItem} />
         <ProtectedRoute exact path="/profile" component={Profile} />
         <Route exact path="/profile/settings" component={FormUser} />
-
-
-
-
       </Switch>
     </div>
   );

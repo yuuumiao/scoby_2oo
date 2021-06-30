@@ -2,74 +2,76 @@ import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
 import "../../styles/form.css";
 
-import apiHandler from "../../api/apiHandler"
+import apiHandler from "../../api/apiHandler";
 import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
+import { objectToFormData } from "../Untils/formDataHelper";
 
 class ItemForm extends Component {
   state = {
-    user: {
-        name: "",
-        description: "",
-        category: "",
-        quantity: 0, 
-
-    }
+    name: "",
+    description: "",
+    category: "",
+    quantity: 0,
   };
 
-
-  static contextType = UserContext; 
-  // Subscribe to the context from a class
+  static contextType = UserContext;
   imageRef = React.createRef();
 
-
   handleChange = (event) => {
-    let value
+    const key = event.target.name;
+    let value =
+      key == "quantity" ? parseInt(event.target.value) : event.target.value;
+    this.setState({ [key]: value });
+    // if the state is arranged in a deeper level to access, setState like this
+    // this.setState({user: { ...this.state.user, [key]: value }});
+  };
 
-    const key = event.target.name
-    // if (key == "quantity"){
-    //   value = Number(event.target.value)
-    // }else if (key == "catagory"){
-    //   value = event.target.value.split()
-    // }
-    value = event.target.value
-
-    this.setState({
-      user: {...this.state.user, [key]: value}
-    });
-  }
-
-  handleSubmit = async (event) => {
+  handleSubmit = (event) => {
     event.preventDefault();
-    // console.log("Wax On Wax Off");
-
     const fd = new FormData();
+    Object.entries(this.state).forEach(([key, value]) => {
+      console.log("key-value", key, value);
+      if (key === "location")
+        fd.append(key["coordinates"], value["coordinates"]);
+      else fd.append(key, value);
+    });
+    // for (const key in this.state) {
 
-    // for (let key in this.state.user) {
-    //   fd.append(key, this.state[key]);
     // }
 
-    fd.append("name", this.state.user.name);
-    fd.append("quantity", Number(this.state.user.quantity));
-    fd.append("desciption", this.state.user.desciption);
-    fd.append("address", this.state.user.address);
+    // function buildFormData(formData, data, parentKey) {
+    //   if (
+    //     data &&
+    //     typeof data === "object" &&
+    //     !(data instanceof Date) &&
+    //     !(data instanceof File)
+    //   ) {
+    //     Object.keys(data).forEach((key) => {
+    //       buildFormData(
+    //         formData,
+    //         data[key],
+    //         parentKey ? `${parentKey}[${key}]` : key
+    //       );
+    //     });
+    //   } else {
+    //     const value = data == null ? "" : data;
+    //     formData.append(parentKey, value);
+    //   }
+    // }
 
-    this.state.user.category === undefined ? fd.append("category", ["Plant"])
-    : fd.append("category", this.state.user.category.split())
+    // buildFormData(fd, this.state, "location");
+    // fd.append("location"["coordinates"], this.state.location.coordinates);
 
     fd.append("imageUrl", this.imageRef.current.files[0]);
-    // console.log("submitting", this.context)
-    
-    console.log(this.imageRef.current.files[0]);
-  //   for (var value of fd.values()) {
-  //     console.log("-->",value);
-  //  }
+    // for (var value of fd.values()) {console.log("-->", value);}
+    // This is for check the data that submit in the form data
 
-    apiHandler.createItems(fd)
-    .then((res) => console.log(res))
-    .catch(err => console.log(err))
+    apiHandler
+      .createItems(fd)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
 
- 
     // In order to send back the data to the client, since there is an input type file you have to send the
     // data as formdata.
     // The object that you'll be sending will maybe be a nested object, in order to handle nested objects in our form data
@@ -82,11 +84,19 @@ class ItemForm extends Component {
     // This handle is passed as a callback to the autocomplete component.
     // Take a look at the data and see what you can get from it.
     // Look at the item model to know what you should retrieve and set as state.
-    console.log(place);
-    this.setState({user:
-      {...this.state.user, address: place.place_name}
-    })
-
+    // console.log(place);
+    //   this.setState({
+    //     user: {
+    //       ...this.state.user,
+    //       address: place.place_name,
+    //       location: place.geometry,
+    //     },
+    //   });
+    // }; //it worked for the nested arrangement, got modified after
+    this.setState({
+      address: place.place_name,
+      location: place.geometry,
+    });
   };
 
   render() {
@@ -97,7 +107,7 @@ class ItemForm extends Component {
 
           <div className="form-group">
             <label className="label" htmlFor="name">
-              Name
+              Item name
             </label>
             <input
               id="name"
@@ -105,7 +115,7 @@ class ItemForm extends Component {
               className="input"
               type="text"
               onChange={this.handleChange}
-              placeholder="What are you giving away ?" 
+              placeholder="What are you giving away ?"
             />
           </div>
 
@@ -114,9 +124,13 @@ class ItemForm extends Component {
               Category
             </label>
 
-            <select id="category" defaultValue="-1" onChange={this.handleChange} name="category">
-              <option value="-1" disabled  
->
+            <select
+              id="category"
+              defaultValue="-1"
+              onChange={this.handleChange}
+              name="category"
+            >
+              <option value="-1" disabled>
                 Select a category
               </option>
               <option value="Plant">Plant</option>
@@ -130,7 +144,13 @@ class ItemForm extends Component {
             <label className="label" htmlFor="quantity">
               Quantity
             </label>
-            <input className="input" id="quantity"  name="quantity" type="number" onChange={this.handleChange}/>
+            <input
+              className="input"
+              id="quantity"
+              name="quantity"
+              type="number"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="form-group">
@@ -157,7 +177,13 @@ class ItemForm extends Component {
             <label className="custom-upload label" htmlFor="image">
               Upload image
             </label>
-            <input className="input" id="image" type="file"  name="image" ref={this.imageRef} />
+            <input
+              className="input"
+              id="image"
+              type="file"
+              name="image"
+              ref={this.imageRef}
+            />
           </div>
 
           <h2>Contact information</h2>
@@ -187,4 +213,4 @@ class ItemForm extends Component {
   }
 }
 
-export default withRouter (ItemForm);
+export default withRouter(ItemForm);

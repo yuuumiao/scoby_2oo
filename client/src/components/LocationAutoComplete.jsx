@@ -48,6 +48,7 @@ class LocationAutoComplete extends Component {
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.state.search}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
       )
       .then((response) => {
+        // console.log("reponse", response);
         this.setState({
           results: response.data.features,
           isLoading: false,

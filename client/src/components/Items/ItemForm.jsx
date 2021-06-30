@@ -49,8 +49,9 @@ class ItemForm extends Component {
     }
 
     const fd = new FormData();
+    // eslint-disable-next-line
     const { httpResponse, ...data } = this.state;
-    //buildFormData(fd, data); // You can find this function in ./src/utils.js
+    // buildFormData(fd, data); // You can find this function in ./src/utils.js
     // Function implemented by user "Vladi Vlad" @stackoverflow : ) => https://stackoverflow.com/a/42241875/13374041
 
     apiHandler
@@ -96,6 +97,7 @@ class ItemForm extends Component {
   };
 
   render() {
+    // eslint-disable-next-line
     const { httpResponse, error } = this.state;
     return (
       <div className="ItemForm-container">
@@ -127,6 +129,7 @@ class ItemForm extends Component {
               name="name"
             />
           </div>
+
           <div className="form-group">
             <label className="label" htmlFor="category">
               Category
@@ -146,8 +149,9 @@ class ItemForm extends Component {
               <option value="Kefir">Kefir</option>
             </select>
           </div>
+
           <div className="form-group">
-            <label className="label" htmlFor="name">
+            <label className="label" htmlFor="quantity">
               Quantity
             </label>
             <input
@@ -158,12 +162,14 @@ class ItemForm extends Component {
               name="quantity"
             />
           </div>
+
           <div className="form-group">
             <label className="label" htmlFor="location">
               Address
             </label>
             <LocationAutoComplete onSelect={this.handlePlace} />
           </div>
+
           <div className="form-group">
             <label className="label" htmlFor="description">
               Description
@@ -221,7 +227,7 @@ class ItemForm extends Component {
             </Message>
           )} */}
           {/* {error && <FeedBack message={error} status="failure" />} */}
-          {/* <Button primary>Add Item</Button> */}
+          <button primary>Add Item</button>
         </form>
       </div>
     );
