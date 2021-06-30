@@ -2,7 +2,7 @@ import axios from "axios";
 
 const service = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
-  withCredentials: true, 
+  withCredentials: true,
   // Cookie is sent to client when using this service. (used for session)
 });
 
@@ -53,26 +53,24 @@ export default {
       .catch(errorHandler);
   },
 
-  createItems(data){
-    // console.log(data)
+  createItems(data) {
     return service
       .post("/api/items", data)
       .then((res) => res.data)
-      .catch(errorHandler);  
+      .catch(errorHandler);
   },
 
-  getUserInfo(){
+  getUserInfo() {
     return service
-    .get("api/users/me")
-    .then((res) => res.data)
-    .catch(errorHandler);
+      .get("api/users/me")
+      .then((res) => res.data)
+      .catch(errorHandler);
   },
 
-  updateUserInfos(data){
+  updateUserInfos(data) {
     return service
-    .patch("/api/users/me", data)
-    .then((res) => res.data)
-    .catch(errorHandler);  
-  }
-
+      .patch("/api/users/me", data)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
 };

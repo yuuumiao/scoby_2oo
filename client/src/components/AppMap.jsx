@@ -163,7 +163,13 @@ class AppMap extends React.PureComponent {
         {vinegarLayer} */}
         {plants.map((i) => {
           return (
-            <Marker key={i._id} coordinates={i.location.coordinates}>
+            <Marker
+              key={i._id}
+              latitude={i.location.coordinates[0]}
+              longitude={i.location.coordinates[1]}
+              offsetLeft={-20}
+              offsetTop={-10}
+            >
               <button>
                 <img src="/media/plant.svg" alt="mapbox-marker-plant" />
                 <p>plant</p>

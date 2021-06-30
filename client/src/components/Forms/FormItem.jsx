@@ -5,7 +5,6 @@ import "../../styles/form.css";
 import apiHandler from "../../api/apiHandler";
 import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
-import { objectToFormData } from "../Untils/formDataHelper";
 
 class ItemForm extends Component {
   state = {
@@ -27,45 +26,35 @@ class ItemForm extends Component {
     // this.setState({user: { ...this.state.user, [key]: value }});
   };
 
+  buildFormData = (formData, data, parentKey) => {
+    if (
+      data &&
+      typeof data === "object" &&
+      !(data instanceof Date) &&
+      !(data instanceof File)
+    ) {
+      Object.keys(data).forEach((key) => {
+        this.buildFormData(
+          formData,
+          data[key],
+          parentKey ? `${parentKey}[${key}]` : key
+        );
+      });
+    } else {
+      const value = data == null ? "" : data;
+      formData.append(parentKey, value);
+    }
+  };
+
   handleSubmit = (event) => {
     event.preventDefault();
     const fd = new FormData();
-    Object.entries(this.state).forEach(([key, value]) => {
-      console.log("key-value", key, value);
-      if (key === "location")
-        fd.append(key["coordinates"], value["coordinates"]);
-      else fd.append(key, value);
-    });
-    // for (const key in this.state) {
+    this.buildFormData(fd, this.state);
 
+    // for (var value of fd.values()) {
+    //   console.log("-->", value);
     // }
-
-    // function buildFormData(formData, data, parentKey) {
-    //   if (
-    //     data &&
-    //     typeof data === "object" &&
-    //     !(data instanceof Date) &&
-    //     !(data instanceof File)
-    //   ) {
-    //     Object.keys(data).forEach((key) => {
-    //       buildFormData(
-    //         formData,
-    //         data[key],
-    //         parentKey ? `${parentKey}[${key}]` : key
-    //       );
-    //     });
-    //   } else {
-    //     const value = data == null ? "" : data;
-    //     formData.append(parentKey, value);
-    //   }
-    // }
-
-    // buildFormData(fd, this.state, "location");
-    // fd.append("location"["coordinates"], this.state.location.coordinates);
-
-    fd.append("imageUrl", this.imageRef.current.files[0]);
-    // for (var value of fd.values()) {console.log("-->", value);}
-    // This is for check the data that submit in the form data
+    // This is for check the data that submit in the form data before submitting
 
     apiHandler
       .createItems(fd)
