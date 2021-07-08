@@ -18,7 +18,7 @@ class App extends Component {
     this.setState({ displayForm: !this.state.displayForm });
   };
 
-  hanldeClose = () => {
+  handleClose = () => {
     this.setState({ displayForm: false });
   };
 

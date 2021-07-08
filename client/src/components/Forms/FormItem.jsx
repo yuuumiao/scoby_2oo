@@ -14,7 +14,7 @@ class ItemForm extends Component {
   };
 
   static contextType = UserContext;
-  imageRef = React.createRef();
+  formRef = React.createRef();
 
   handleChange = (event) => {
     const key = event.target.name;
@@ -107,7 +107,7 @@ class ItemForm extends Component {
   render() {
     return (
       <div className="ItemForm-container">
-        <form className="form" onSubmit={this.handleSubmit}>
+        <form className="form" onSubmit={this.handleSubmit} ref={this.formRef}>
           <p onClick={this.props.handleClose} className="close-link">
             X
           </p>
