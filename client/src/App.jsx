@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import NavMain from "./components/NavMain";
 import Home from "./pages/Home";
@@ -9,20 +9,44 @@ import Profile from "./pages/Profile";
 import FormItem from "./components/Forms/FormItem";
 import FormUser from "./components/Forms/FormUser";
 
-function App() {
-  return (
-    <div className="App">
-      <NavMain />
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/signin" component={Signin} />
-        <Route exact path="/signup" component={Signup} />
-        <Route exact path="/item/create" component={FormItem} />
-        <ProtectedRoute exact path="/profile" component={Profile} />
-        <Route exact path="/profile/settings" component={FormUser} />
-      </Switch>
-    </div>
-  );
+class App extends Component {
+  state = {
+    displayForm: false,
+  };
+
+  toggleFormDisplay = () => {
+    this.setState({ displayForm: !this.state.displayForm });
+  };
+
+  hanldeClose = () => {
+    this.setState({ displayForm: false });
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <NavMain toggleFormDisplay={this.toggleFormDisplay} />
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={(historyProps) => (
+              <Home
+                {...historyProps}
+                displayForm={this.state.displayForm}
+                handleClose={this.handleClose}
+              />
+            )}
+          />
+          <Route exact path="/signin" component={Signin} />
+          <Route exact path="/signup" component={Signup} />
+          <Route exact path="/item/create" component={FormItem} />
+          <ProtectedRoute exact path="/profile" component={Profile} />
+          <Route exact path="/profile/settings" component={FormUser} />
+        </Switch>
+      </div>
+    );
+  }
 }
 
 export default App;

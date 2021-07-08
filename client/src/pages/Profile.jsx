@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import withUser from "../components/Auth/withUser";
 import UserContext from "../components/Auth/UserContext";
-import apiHandler from "./../api/apiHandler"
-import CardItem from "../components/Items/CardItem"
+import apiHandler from "./../api/apiHandler";
+import CardItem from "../components/Items/CardItem";
 import "../styles/Profile.css";
 import "../styles/CardItem.css";
-
 
 class Profile extends Component {
   static contextType = UserContext;
@@ -16,26 +15,25 @@ class Profile extends Component {
     httpResponse: null,
     selectedItem: null,
     userItems: [],
-  }
+  };
 
-
-  componentDidMount(){
-    this.setState({phoneNumber: this.context.user.phoneNumber})
+  componentDidMount() {
+    this.setState({ phoneNumber: this.context.user.phoneNumber });
   }
 
   handleChange = (event) => {
-    this.setState({ phoneNumber: event.target.value})
-  }
+    this.setState({ phoneNumber: event.target.value });
+  };
 
   addPhoneNumber = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     const { httpResponse, userItems, selectedItem, ...userData } = this.state;
-    console.log(userData)
+    console.log(userData);
 
     apiHandler
       //.updateUserInfos(userData)
       .updateUserInfos({
-        phoneNumber: this.state.phoneNumber
+        phoneNumber: this.state.phoneNumber,
       })
       .then((data) => {
         this.context.setUser(data);
@@ -58,17 +56,13 @@ class Profile extends Component {
         }, 1000);
       });
   };
-  
-
 
   render() {
-
     const { user } = this.context;
 
     return (
       <div style={{ padding: "100px", fontSize: "1.25rem" }}>
         {/* <pre>{JSON.stringify(this.props, null, 2)}</pre> */}
-
 
         <h2 style={{ fontSize: "1.5rem", marginBottom: "10px" }}>
           This is profile, it's protected !
@@ -117,7 +111,11 @@ class Profile extends Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <button className="form__button">{this.state.phoneNumber? "Change phone number":"Add phone number"}</button> 
+              <button className="form__button">
+                {this.state.phoneNumber
+                  ? "Change phone number"
+                  : "Add phone number"}
+              </button>
             </form>
           </div>
 
@@ -131,9 +129,7 @@ class Profile extends Component {
             </div>
           </div>
 
-      <CardItem />
-
-
+          <CardItem />
         </section>
       </div>
     );

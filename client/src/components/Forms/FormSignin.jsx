@@ -1,5 +1,5 @@
-import React, { Component, Redirect } from "react";
-import { Link, useHistory} from "react-router-dom";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 //import { withUser } from "../Auth/withUser";
 import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
@@ -30,7 +30,7 @@ class FormSignin extends Component {
       .signin(this.state)
       .then((data) => {
         this.context.setUser(data);
-        console.log(this.props)
+        console.log(this.props);
         this.props.history.push("/");
       })
       .catch((error) => {
@@ -39,7 +39,6 @@ class FormSignin extends Component {
   };
 
   render() {
-
     // if (this.context.isLoggedIn) {
     //   // This logic is the same as in the <ProtectedRoute /> component
     //   // Here this is handled within the component, if there are some views
@@ -104,5 +103,5 @@ class FormSignin extends Component {
   }
 }
 
-export default withRouter(FormSignin); 
+export default withRouter(FormSignin);
 // Browser history and user will be given as props to the FormSignin thanks to HOCs !

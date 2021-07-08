@@ -1,7 +1,9 @@
 import React from "react";
 import "../../styles/ItemDisplay.css";
+import withUser from "../Auth/withUser";
 
-const ItemDisplay = ({ item, handleClose }) => {
+const ItemDisplay = (props) => {
+  const { item, handleClose, context } = props;
   return (
     <div className="Item-container">
       <p onClick={handleClose} className="close-link">
@@ -18,15 +20,15 @@ const ItemDisplay = ({ item, handleClose }) => {
       <p className="location">{item.formattedAddress}</p>
       <div className="user-info">
         <div className="round-image-user">
-          <img src={item.id_user.profileImg} alt="user" />
+          <img src={context.user.profileImg} alt="user" />
         </div>
-        <span>Given away by {item.id_user.firstName}</span>
+        <span>Given away by {context.user.firstName}</span>
       </div>
       <div className="contact-information">
-        Contact {item.id_user.firstName} at <b>{item.contact}</b>
+        Contact {context.user.firstName} at <b>{item.contact}</b>
       </div>
     </div>
   );
 };
 
-export default ItemDisplay;
+export default withUser(ItemDisplay);

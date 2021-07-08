@@ -1,8 +1,9 @@
 import React from "react";
 import AppMap from "../components/AppMap";
 import ItemDisplay from "../components/Items/ItemDisplay";
-import ItemForm from "../components/Items/ItemForm";
+//import ItemForm from "../components/Items/ItemForm";
 import UserContext from "../components/Auth/UserContext";
+import FormItem from "../components/Forms/FormItem";
 import apiHandler from "../api/apiHandler";
 
 class Home extends React.Component {
@@ -23,6 +24,7 @@ class Home extends React.Component {
   };
 
   onSelectItem = (selectedItem) => {
+    console.log(selectedItem);
     this.setState({ selectedItem: selectedItem });
   };
 
@@ -35,11 +37,9 @@ class Home extends React.Component {
 
     return (
       <div>
-        <h1>home page</h1>
-
         {user && this.props.displayForm && (
-          <ItemForm
-            handleClose={this.props.handleFormClose}
+          <FormItem
+            handleClose={this.props.handleClose}
             addItem={this.addItem}
           />
         )}

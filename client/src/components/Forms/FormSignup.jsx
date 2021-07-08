@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter, Redirect} from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 //import  withUser  from "../Auth/withUser";
 import UserContext from "../Auth/UserContext";
 import apiHandler from "../../api/apiHandler";
@@ -12,7 +12,7 @@ class FormSignup extends Component {
   handleChange = (event) => {
     const value =
       event.target.type === "file" ? event.target.files[0] : event.target.value;
-      const key = event.target.name;
+    const key = event.target.name;
     // console.log("key->", key, "value->", value)
     this.setState({ [key]: value });
   };
@@ -24,11 +24,10 @@ class FormSignup extends Component {
       .signup({
         firstName: this.state.firstName,
         lastName: this.state.lastName,
-        email: this.state.email, 
-        password:this.state.password
+        email: this.state.email,
+        password: this.state.password,
       })
       .then((data) => {
-        // console.log(data)
         this.context.setUser(data);
         this.props.history.push("/");
       })
@@ -59,11 +58,7 @@ class FormSignup extends Component {
           </h1>
         </header>
 
-        <form
-          autoComplete="off"
-          className="form"
-          onSubmit={this.handleSubmit}
-        >
+        <form autoComplete="off" className="form" onSubmit={this.handleSubmit}>
           <h2 className="title">Create account</h2>
 
           <div className="form-group">
@@ -76,7 +71,6 @@ class FormSignup extends Component {
               type="text"
               name="firstName"
               onChange={this.handleChange}
-
             />
           </div>
 
@@ -90,7 +84,6 @@ class FormSignup extends Component {
               type="text"
               name="lastName"
               onChange={this.handleChange}
-
             />
           </div>
 
@@ -98,13 +91,17 @@ class FormSignup extends Component {
             <label className="label" htmlFor="email">
               Email
             </label>
-            <input className="input" id="email" type="email" name="email" 
-                      onChange={this.handleChange}
- />
+            <input
+              className="input"
+              id="email"
+              type="email"
+              name="email"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="form-group">
-            <label className="label" htmlFor="password" >
+            <label className="label" htmlFor="password">
               Password
             </label>
             <input
@@ -113,7 +110,6 @@ class FormSignup extends Component {
               type="password"
               name="password"
               onChange={this.handleChange}
-
             />
           </div>
 

@@ -51,39 +51,22 @@ class AppMap extends React.PureComponent {
       .map((p) => (
         <Marker
           key={p._id}
-          onClick={(event) => this.handleClick()}
+          onClick={(event) => this.handleClick(p)}
           coordinates={p.location.coordinates}
+          scale={3}
         >
           <button>
-            <img src={`/media/${arg}.svg`} alt={`${arg}-marker`} />
+            <img
+              src={`/media/${arg}.svg`}
+              alt={`${arg}-marker`}
+              style={{ width: "3vw", height: "auto" }}
+            />
           </button>
         </Marker>
       ));
   };
 
   render() {
-    // const kombuchas = this.props.items.filter(
-    //   (item) => item.category[0] === "Kombucha"
-    // );
-
-    // const vinegars = this.props.items.filter(
-    //   (item) => item.category[0] === "Vinegar"
-    // );
-
-    // const plants = this.props.items.filter(
-    //   (item) => item.category[0] === "Plant"
-    // );
-    // const plantsMarkers = plants.map((p) => (
-    //   <Marker
-    //     key={p._id}
-    //     onClick={(event) => this.handleClick()}
-    //     coordinates={p.location.coordinates}
-    //   >
-    //     <button>
-    //       <img src="/media/plant.svg" alt="plant-marker" />
-    //     </button>
-    //   </Marker>
-    // ));
     const plantsMarkers = this.filterAndProductMarkersByCategroy("plant");
     return (
       <Map

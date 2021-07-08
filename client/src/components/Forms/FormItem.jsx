@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
 import "../../styles/form.css";
-
 import apiHandler from "../../api/apiHandler";
 import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
@@ -20,7 +19,7 @@ class ItemForm extends Component {
   handleChange = (event) => {
     const key = event.target.name;
     let value =
-      key == "quantity" ? parseInt(event.target.value) : event.target.value;
+      key === "quantity" ? parseInt(event.target.value) : event.target.value;
     this.setState({ [key]: value });
     // if the state is arranged in a deeper level to access, setState like this
     // this.setState({user: { ...this.state.user, [key]: value }});
@@ -58,7 +57,24 @@ class ItemForm extends Component {
 
     apiHandler
       .createItems(fd)
-      .then((res) => console.log(res))
+      .then((res) => {
+        this.formRef.current.reset();
+        this.props.addItem(res);
+        this.setState({
+          httpResponse: {
+            status: "success",
+            message: "Item successfully added.",
+          },
+          name: "",
+          category: "",
+          quantity: "",
+          location: {
+            coordinates: [],
+          },
+          address: "",
+          description: "",
+        });
+      })
       .catch((err) => console.log(err));
 
     // In order to send back the data to the client, since there is an input type file you have to send the
@@ -92,6 +108,9 @@ class ItemForm extends Component {
     return (
       <div className="ItemForm-container">
         <form className="form" onSubmit={this.handleSubmit}>
+          <p onClick={this.props.handleClose} className="close-link">
+            X
+          </p>
           <h2 className="title">Add Item</h2>
 
           <div className="form-group">
@@ -176,24 +195,41 @@ class ItemForm extends Component {
           </div>
 
           <h2>Contact information</h2>
-
           <div className="form-group">
             <label className="label" htmlFor="contact">
               How do you want to be reached?
             </label>
             <div>
-              <input type="radio" />
-              user email
+              <input
+                type="radio"
+                name="contact"
+                onChange={this.handleChange}
+                checked={this.state.contact === this.context.user.email}
+                value={this.context.user.email}
+              />
+              <label>{this.context.user.email}</label>
             </div>
-            <input type="radio" />
-            contact phone number
+            {this.context.user.phoneNumber && (
+              <div>
+                <input
+                  type="radio"
+                  name="contact"
+                  checked={this.state.contact === this.context.user.phoneNumber}
+                  onChange={this.handleChange}
+                  value={this.context.user.phoneNumber}
+                />
+                <label>{this.context.user.phoneNumber}</label>
+              </div>
+            )}
           </div>
 
-          <p className="message">
-            <img src="/media/info.svg" alt="info" />
-            Want to be contacted by phone? Add your phone number in your
-            personal page.
-          </p>
+          {/* {!this.context.user.phoneNumber && (
+            <Message info icon="info">
+              Want to be contacted by phone? Add your phone number in your
+              personal page.
+            </Message>
+          )} */}
+          {/* {error && <FeedBack message={error} status="failure" />} */}
 
           <button className="btn-submit">Add Item</button>
         </form>

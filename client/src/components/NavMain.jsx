@@ -6,7 +6,7 @@ import apiHandler from "../api/apiHandler";
 import "../styles/NavMain.css";
 
 const NavMain = (props) => {
-  const { context } = props;
+  const { toggleFormDisplay, context } = props;
 
   function handleLogout() {
     apiHandler
@@ -22,11 +22,12 @@ const NavMain = (props) => {
   return (
     <nav className="NavMain">
       <NavLink exact to="/">
-        <h3 className="logo">App name</h3>
+        <h3 className="logo">Scoby</h3>
       </NavLink>
       <ul className="nav-list">
         {context.isLoggedIn && (
           <React.Fragment>
+            <li onClick={toggleFormDisplay}>Add item</li>
             <li>
               <NavLink to="/profile">
                 {context.user && context.user.email}
