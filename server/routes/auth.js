@@ -8,35 +8,34 @@ const salt = 10;
 router.post("/signin", (req, res, next) => {
   //console.log("reqBody", req.body)
   const { email, password } = req.body;
-  User
-  .findOne({ email })
-  .then((userDocument) => {
-    if (!userDocument) {
-      return res.status(400).json({ message: "Invalid credentials" }); // Send a general message so hackers don't know if the email or the password were incorrect.
-    }
-    const isValidPassword = bcrypt.compareSync(
-      password,
-      userDocument.password
-    )
-    // compareSync returns a boolean, if the password is not valid, send a general message so hackers don't know if the email or the password were incorrect.
-    if (!isValidPassword) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-    req.session.currentUser = userDocument._id; // only store user's id in session.
-    // userDocument is a mongodb document, we cannot mutate it but every document has a .toObject().
-    const userObj = userDocument.toObject();
-    // userObj is now an object, we can no delete the password before setting it in the session and sending the user to the frontend.
-    delete userObj.password;
-    res.status(200).json(userObj);
-  })
-  .catch((error) => {
-    res.status(500).json(error);
-  });
+  User.findOne({ email })
+    .then((userDocument) => {
+      if (!userDocument) {
+        return res.status(400).json({ message: "Invalid credentials" }); // Send a general message so hackers don't know if the email or the password were incorrect.
+      }
+      const isValidPassword = bcrypt.compareSync(
+        password,
+        userDocument.password
+      );
+      // compareSync returns a boolean, if the password is not valid, send a general message so hackers don't know if the email or the password were incorrect.
+      if (!isValidPassword) {
+        return res.status(400).json({ message: "Invalid credentials" });
+      }
+      req.session.currentUser = userDocument._id; // only store user's id in session.
+      // userDocument is a mongodb document, we cannot mutate it but every document has a .toObject().
+      const userObj = userDocument.toObject();
+      // userObj is now an object, we can no delete the password before setting it in the session and sending the user to the frontend.
+      delete userObj.password;
+      res.status(200).json(userObj);
+    })
+    .catch((error) => {
+      res.status(500).json(error);
+    });
 });
 
 router.post("/signup", (req, res, next) => {
   const { email, password, firstName, lastName } = req.body;
-  console.log("body"), req.body
+  console.log("body"), req.body;
 
   User.findOne({ email })
     .then((userDocument) => {
