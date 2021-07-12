@@ -1,7 +1,6 @@
 import React from "react";
 import AppMap from "../components/AppMap";
 import ItemDisplay from "../components/Items/ItemDisplay";
-//import ItemForm from "../components/Items/ItemForm";
 import UserContext from "../components/Auth/UserContext";
 import FormItem from "../components/Forms/FormItem";
 import apiHandler from "../api/apiHandler";
@@ -24,7 +23,7 @@ class Home extends React.Component {
   };
 
   onSelectItem = (selectedItem) => {
-    console.log(selectedItem);
+    // console.log(selectedItem);
     this.setState({ selectedItem: selectedItem });
   };
 

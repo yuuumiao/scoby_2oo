@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import LocationAutoComplete from "../LocationAutoComplete";
-import "../../styles/form.css";
+import "../../styles/ItemForm.css";
 import apiHandler from "../../api/apiHandler";
 import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";

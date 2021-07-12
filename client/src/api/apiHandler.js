@@ -46,7 +46,7 @@ export default {
       .catch(errorHandler);
   },
 
-  getItems(data) {
+  getItems() {
     return service
       .get("/api/items")
       .then((res) => res.data)
@@ -60,9 +60,16 @@ export default {
       .catch(errorHandler);
   },
 
+  deleteItem(id) {
+    return service
+      .delete(`/api/items/${id}`)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
   getUserInfo() {
     return service
-      .get("api/users/me")
+      .get("/api/users/me")
       .then((res) => res.data)
       .catch(errorHandler);
   },

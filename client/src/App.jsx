@@ -41,7 +41,18 @@ class App extends Component {
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/item/create" component={FormItem} />
-          <ProtectedRoute exact path="/profile" component={Profile} />
+          <ProtectedRoute
+            exact
+            path="/profile"
+            render={(historyProps) => (
+              <Profile
+                {...historyProps}
+                displayForm={this.state.displayForm}
+                handleClose={this.handleClose}
+              />
+            )}
+          />
+
           <Route exact path="/profile/settings" component={FormUser} />
         </Switch>
       </div>
