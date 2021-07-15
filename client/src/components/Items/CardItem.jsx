@@ -16,13 +16,16 @@ const CardItem = ({
         <div className="round-image">
           <img src={image} alt="item" />
         </div>
-        <div className="description">
-          <h2>{name}</h2>
-          <h4>Quantity: {quantity}</h4>
-          <p>{description}</p>
+        <div className="item-empty">
+          <h2 className="description">{name}</h2>
+          <h4 className="description">Quantity: {quantity}</h4>
+          <p className="description">{description}</p>
           <div className="buttons">
-            <span>
-              <button className="btn-secondary" onClick={handleDelete(id)}>
+            <span className="buttons">
+              <button
+                className="btn-secondary"
+                onClick={() => handleDelete(id)}
+              >
                 Delete
               </button>
             </span>

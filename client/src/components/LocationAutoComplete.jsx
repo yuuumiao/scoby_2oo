@@ -10,6 +10,7 @@ class LocationAutoComplete extends Component {
       results: [],
       isLoading: false,
     };
+    this.baseState = this.state;
     this.handleSearchChange = this.handleSearchChange.bind(this);
 
     if (!process.env.REACT_APP_MAPBOX_TOKEN) {
@@ -18,6 +19,10 @@ class LocationAutoComplete extends Component {
       );
     }
   }
+
+  handleReset = () => {
+    this.setState(this.baseState);
+  };
 
   handleSearchChange(e) {
     this.setState({
@@ -73,7 +78,7 @@ class LocationAutoComplete extends Component {
           type="text"
           value={this.state.search}
           onChange={this.handleSearchChange}
-          placeholder="Enter an address"
+          placeholder={this.props.defaultAddress || "Enter an address"}
         />
         <ul className="LocationAutoComplete-results">
           {this.state.results.map((place) => (

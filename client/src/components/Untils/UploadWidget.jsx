@@ -1,5 +1,5 @@
 import React from "react";
-//import "../styles/UploadWidget.css";
+import "../../styles/UploadWidget.css";
 
 // https://reactjs.org/docs/forwarding-refs.html
 
@@ -9,7 +9,6 @@ const UploadWidget = React.forwardRef((props, ref) => {
   const handleFileSelect = (event) => {
     // This feature allows us to create a "fake URL" of the file that the user wants to upload
     // In order to display the output to the user.
-    // See <FormProfile /> or <ItemForm />
     const file = event.target.files[0];
     const tempURL = URL.createObjectURL(file);
     props.onFileSelect && props.onFileSelect(tempURL);

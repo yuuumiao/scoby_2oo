@@ -2,7 +2,7 @@ import React from "react";
 import AppMap from "../components/AppMap";
 import ItemDisplay from "../components/Items/ItemDisplay";
 import UserContext from "../components/Auth/UserContext";
-import FormItem from "../components/Forms/FormItem";
+import FormItem from "../components/Items/FormItem";
 import apiHandler from "../api/apiHandler";
 
 class Home extends React.Component {
@@ -19,6 +19,7 @@ class Home extends React.Component {
   }
 
   addItem = (item) => {
+    // console.log("item", item);
     this.setState({ items: [...this.state.items, item] });
   };
 
@@ -38,6 +39,7 @@ class Home extends React.Component {
       <div>
         {user && this.props.displayForm && (
           <FormItem
+            type="fromHome"
             handleClose={this.props.handleClose}
             addItem={this.addItem}
           />

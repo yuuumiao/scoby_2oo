@@ -1,5 +1,6 @@
 import React from "react";
 import ReactMapboxGl, { Marker } from "react-mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
@@ -40,7 +41,6 @@ class AppMap extends React.PureComponent {
   }
 
   handleClick = (selectedItem) => {
-    // Pass the selectedItem back to the parent.
     this.props.handleSelectItem(selectedItem);
   };
 
@@ -48,22 +48,24 @@ class AppMap extends React.PureComponent {
     const Arg = arg.slice(0, 1).toUpperCase() + arg.slice(1).toLowerCase();
     return this.props.items
       .filter((item) => item.category[0] === Arg)
-      .map((p) => (
-        <Marker
-          key={p._id}
-          onClick={(event) => this.handleClick(p)}
-          coordinates={p.location.coordinates}
-          scale={3}
-        >
-          <button>
-            <img
-              src={`/media/${arg}.svg`}
-              alt={`${arg}-marker`}
-              style={{ width: "3vw", height: "auto" }}
-            />
-          </button>
-        </Marker>
-      ));
+      .map((p) =>
+        p.location.coordinates.length === 2 ? (
+          <Marker
+            key={p._id}
+            onClick={() => this.handleClick(p)}
+            coordinates={p.location.coordinates}
+            scale={3}
+          >
+            <button>
+              <img
+                src={`/media/${arg}.svg`}
+                alt={`${arg}-marker`}
+                style={{ width: "3vw", height: "auto" }}
+              />
+            </button>
+          </Marker>
+        ) : null
+      );
   };
 
   render() {
@@ -82,8 +84,10 @@ class AppMap extends React.PureComponent {
           width: "100vw",
         }}
         center={[this.state.lng, this.state.lat]}
+        onViewportChange={this.setState}
       >
         {plantsMarkers}
+
         {/* {kombuchaLayer}
         {kefirLayer}
         {vinegarLayer} */}

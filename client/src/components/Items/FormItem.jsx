@@ -4,62 +4,64 @@ import "../../styles/ItemForm.css";
 import apiHandler from "../../api/apiHandler";
 import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
+import UploadWidget from "../Untils/UploadWidget";
+import { buildFormData } from "../Untils/index";
+import FeedBack from "../SmallComponents/Feedback";
+import Message from "../SmallComponents/Message";
 
-class ItemForm extends Component {
+class FormItem extends Component {
   state = {
     name: "",
-    description: "",
     category: "",
-    quantity: 0,
+    quantity: "",
+    location: {
+      coordinates: [],
+    },
+    address: "",
+    description: "",
+    httpResponse: null,
+    error: null,
   };
 
   static contextType = UserContext;
-  formRef = React.createRef();
+  imageRef = React.createRef(); //to upload the image
+  formRef = React.createRef(); //to reset the data in the form
+  locationRef = React.createRef(); //to reset the data in the form from the parent component
 
   handleChange = (event) => {
     const key = event.target.name;
-    let value =
-      key === "quantity" ? parseInt(event.target.value) : event.target.value;
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value;
     this.setState({ [key]: value });
     // if the state is arranged in a deeper level to access, setState like this
     // this.setState({user: { ...this.state.user, [key]: value }});
   };
 
-  buildFormData = (formData, data, parentKey) => {
-    if (
-      data &&
-      typeof data === "object" &&
-      !(data instanceof Date) &&
-      !(data instanceof File)
-    ) {
-      Object.keys(data).forEach((key) => {
-        this.buildFormData(
-          formData,
-          data[key],
-          parentKey ? `${parentKey}[${key}]` : key
-        );
-      });
-    } else {
-      const value = data == null ? "" : data;
-      formData.append(parentKey, value);
-    }
+  handleFileSelect = (temporaryURL) => {
+    // Get the temporaryURL from the UploadWidget component and
+    // set the state so we can have a visual feedback on what the image will look like :)
+    this.setState({ selectedFile: temporaryURL });
   };
 
   handleSubmit = (event) => {
     event.preventDefault();
+    // console.log(this.imageRef.current.files);
     const fd = new FormData();
-    this.buildFormData(fd, this.state);
+    const { httpResponse, selectedFile, ...data } = this.state;
+    buildFormData(fd, data);
+    fd.append("image", this.imageRef.current.files[0]);
 
     // for (var value of fd.values()) {
     //   console.log("-->", value);
-    // }
-    // This is for check the data that submit in the form data before submitting
+    // } This is for check the data that submit in the form data before submitting
 
     apiHandler
       .createItems(fd)
       .then((res) => {
-        this.formRef.current.reset();
         this.props.addItem(res);
+        this.formRef.current.reset(); //uncontrolled form to reset
         this.setState({
           httpResponse: {
             status: "success",
@@ -73,10 +75,25 @@ class ItemForm extends Component {
           },
           address: "",
           description: "",
+          selectedFile: "",
+          contact: null,
         });
+        this.locationRef.current.handleReset(); //reset the state in the child component
+        this.timeoutId = setTimeout(() => {
+          this.setState({ httpResponse: null, resetLocation: false });
+        }, 2000);
       })
-      .catch((err) => console.log(err));
-
+      .catch((err) => {
+        this.setState({
+          httpResponse: {
+            status: "failure",
+            message: "An error occured, try again later.",
+          },
+        });
+        this.timeoutId = setTimeout(() => {
+          this.setState({ httpResponse: null });
+        }, 2000);
+      });
     // In order to send back the data to the client, since there is an input type file you have to send the
     // data as formdata.
     // The object that you'll be sending will maybe be a nested object, in order to handle nested objects in our form data
@@ -105,6 +122,8 @@ class ItemForm extends Component {
   };
 
   render() {
+    const { httpResponse } = this.state;
+
     return (
       <div className="ItemForm-container">
         <form className="form" onSubmit={this.handleSubmit} ref={this.formRef}>
@@ -165,7 +184,10 @@ class ItemForm extends Component {
             <label className="label" htmlFor="location">
               Address
             </label>
-            <LocationAutoComplete onSelect={this.handlePlace} />
+            <LocationAutoComplete
+              onSelect={this.handlePlace}
+              ref={this.locationRef}
+            />
           </div>
 
           <div className="form-group">
@@ -181,20 +203,30 @@ class ItemForm extends Component {
             ></textarea>
           </div>
 
-          <div className="form-group">
-            <label className="custom-upload label" htmlFor="image">
-              Upload image
-            </label>
-            <input
-              className="input"
-              id="image"
-              type="file"
-              name="image"
+          <div
+            className="form-group"
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <UploadWidget
               ref={this.imageRef}
-            />
+              name="image"
+              onFileSelect={this.handleFileSelect}
+              className="UploadWidget-control"
+            >
+              Upload image
+            </UploadWidget>
+            {this.state.selectedFile ? (
+              <div className="upload-thumbnail-control uploaded">
+                <img src={this.state.selectedFile} alt="selectedImage" />
+              </div>
+            ) : (
+              <div className="upload-thumbnail-control empty">
+                placeholder for the picture
+              </div>
+            )}
           </div>
 
-          <h2>Contact information</h2>
+          <h2 style={{ marginTop: "5%" }}>Contact information</h2>
           <div className="form-group">
             <label className="label" htmlFor="contact">
               How do you want to be reached?
@@ -223,13 +255,19 @@ class ItemForm extends Component {
             )}
           </div>
 
-          {/* {!this.context.user.phoneNumber && (
+          {!this.context.user.phoneNumber && (
             <Message info icon="info">
               Want to be contacted by phone? Add your phone number in your
               personal page.
             </Message>
-          )} */}
+          )}
           {/* {error && <FeedBack message={error} status="failure" />} */}
+          {httpResponse && (
+            <FeedBack
+              message={httpResponse.message}
+              status={httpResponse.status}
+            />
+          )}
 
           <button className="btn-submit">Add Item</button>
         </form>
@@ -238,4 +276,4 @@ class ItemForm extends Component {
   }
 }
 
-export default withRouter(ItemForm);
+export default withRouter(FormItem);

@@ -46,6 +46,20 @@ export default {
       .catch(errorHandler);
   },
 
+  getUserInfo() {
+    return service
+      .get("/api/users/me")
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
+  updateUserInfos(data) {
+    return service
+      .patch("/api/users/me", data)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
   getItems() {
     return service
       .get("/api/items")
@@ -60,23 +74,16 @@ export default {
       .catch(errorHandler);
   },
 
+  updateItems(id, data) {
+    return service
+      .patch(`/api/items/${id}`, data)
+      .then((res) => res.data)
+      .catch(errorHandler);
+  },
+
   deleteItem(id) {
     return service
       .delete(`/api/items/${id}`)
-      .then((res) => res.data)
-      .catch(errorHandler);
-  },
-
-  getUserInfo() {
-    return service
-      .get("/api/users/me")
-      .then((res) => res.data)
-      .catch(errorHandler);
-  },
-
-  updateUserInfos(data) {
-    return service
-      .patch("/api/users/me", data)
       .then((res) => res.data)
       .catch(errorHandler);
   },

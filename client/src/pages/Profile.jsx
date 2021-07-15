@@ -4,7 +4,8 @@ import withUser from "../components/Auth/withUser";
 import UserContext from "../components/Auth/UserContext";
 import apiHandler from "./../api/apiHandler";
 import CardItem from "../components/Items/CardItem";
-import FormItem from "../components/Forms/FormItem";
+import FormItem from "../components/Items/FormItem";
+import FormItemEdit from "../components/Items/FormItemEdit";
 import "../styles/Profile.css";
 import "../styles/CardItem.css";
 
@@ -37,11 +38,8 @@ class Profile extends Component {
 
   addPhoneNumber = (event) => {
     event.preventDefault();
-    const { httpResponse, userItems, selectedItem, ...userData } = this.state;
-    console.log(userData);
 
     apiHandler
-      //.updateUserInfos(userData)
       .updateUserInfos({
         phoneNumber: this.state.phoneNumber,
       })
@@ -67,20 +65,25 @@ class Profile extends Component {
       });
   };
 
-  handleEdit = (id) => {
-    console.log("clicking the edit");
-    this.setState({ displayForm: true });
+  addItem = (item) => {
+    this.setState({ userItems: [...this.state.userItems, item] });
+  };
+
+  handleDelete = (id) => {
+    apiHandler.deleteItem(id);
+    const newItems = this.state.userItems.filter((item) => item._id !== id);
+    this.setState({ userItems: newItems });
   };
 
   closeForm = () => {
     this.setState({ displayForm: false });
   };
 
-  handleDelete = (id) => {
-    console.log("clicking the delete");
-    apiHandler.deleteItem(id);
-    const newItems = this.state.userItems.filter((item) => item._id !== id);
-    this.setState({ userItems: newItems });
+  handleEdit = (id) => {
+    const selectedItem = [...this.state.userItems].filter(
+      (e) => e._id === id
+    )[0];
+    this.setState({ displayForm: true, selectedItem: selectedItem });
   };
 
   render() {
@@ -90,7 +93,7 @@ class Profile extends Component {
       <div style={{ padding: "100px", fontSize: "1.25rem" }}>
         {/* <pre>{JSON.stringify(this.props, null, 2)}</pre> */}
 
-        <h2 style={{ fontSize: "1.5rem", marginBottom: "10px" }}>
+        {/* <h2 style={{ fontSize: "1.5rem", marginBottom: "10px" }}>
           This is profile, it's protected !
         </h2>
         <p>
@@ -104,7 +107,7 @@ class Profile extends Component {
           href="https://reacttraining.com/react-router/web/example/auth-workflow"
         >
           React router dom Demo of a protected route
-        </a>
+        </a> */}
 
         {user && this.props.displayForm && (
           <FormItem
@@ -113,7 +116,13 @@ class Profile extends Component {
           />
         )}
 
-        {this.displayForm && <FormItem handleClose={this.closeForm} />}
+        {this.state.selectedItem && (
+          <FormItemEdit
+            handleClose={this.closeForm}
+            editItem={this.editItem}
+            item={this.state.selectedItem}
+          />
+        )}
 
         <section className="Profile">
           <div className="user-image round-image">
@@ -158,7 +167,7 @@ class Profile extends Component {
             </form>
           </div>
 
-          {this.state.userItems.length == 0 && (
+          {this.state.userItems.length === 0 && (
             <div className="CardItem">
               <div className="item-empty">
                 <div className="round-image">
@@ -172,13 +181,14 @@ class Profile extends Component {
           {this.state.userItems.length > 0 &&
             this.state.userItems.map((item) => (
               <CardItem
+                key={item._id}
                 name={item.name}
                 quantity={item.quantity}
                 description={item.description}
                 image={item.image}
                 id={item._id}
                 handleDelete={this.handleDelete}
-                hanldeEdit={this.handleEdit}
+                handleEdit={this.handleEdit}
               />
             ))}
         </section>

@@ -6,7 +6,7 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
-import FormItem from "./components/Forms/FormItem";
+import FormItem from "./components/Items/FormItem";
 import FormUser from "./components/Forms/FormUser";
 
 class App extends Component {
