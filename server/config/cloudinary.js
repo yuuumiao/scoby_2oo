@@ -11,6 +11,12 @@ cloudinary.config({
 // cloudinary : SAAS platform : specialized in images hosting (tools : metadata, image analyzing ...)
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
+  //the followings are optional
+  folder: "scoby", // folder name to upload to on your cloudinary account.
+  allowedFormats: ["jpg", "png"],
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
 });
 
 const fileUploader = multer({ storage });

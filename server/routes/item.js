@@ -27,26 +27,32 @@ router.get("/:id", (req, res, next) => {
 });
 
 //Create an item in the DB - prefix : "/api/items"
-router.post("/", uploader.single("imageUrl"), (req, res, next) => {
+router.post("/", uploader.single("image"), (req, res, next) => {
   const newItem = { ...req.body };
 
   if (req.file) {
     newItem.image = req.file.path;
   }
 
+  console.log(req.file);
   newItem.id_user = req.session.currentUser;
+
   Item.create(newItem)
-    .then((resFromApi) => {
-      // console.log("resFromApi at uploader", resFromApi)
-      res.status(200).json(resFromApi);
+    .then((itemDocument) => {
+      itemDocument
+        .populate("id_user")
+        .execPopulate() // Populate on .create() does not work, but we can use populate() on the document once its created !
+        .then((item) => {
+          res.status(201).json(item); // send the populated document.
+        })
+        .catch(next);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 });
 
 //Update an item - prefix : "/api/items"
-router.patch("/:id", (req, res, next) => {
+router.patch("/:id", uploader.single("image"), (req, res, next) => {
+  console.log(req.body);
   Item.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((resFromApi) => {
       res.status(200).json(resFromApi);
@@ -58,7 +64,7 @@ router.patch("/:id", (req, res, next) => {
 
 //Deletes an item - prefix : "/api/items"
 router.delete("/:id", (req, res, next) => {
-  Item.findByIdAndRemove(req.params.id)
+  Item.findByIdAndDelete(req.params.id)
     .then((resFromApi) => {
       res.status(200).json({ message: "deleted successfully" });
     })
