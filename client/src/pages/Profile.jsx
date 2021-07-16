@@ -6,6 +6,7 @@ import apiHandler from "./../api/apiHandler";
 import CardItem from "../components/Items/CardItem";
 import FormItem from "../components/Items/FormItem";
 import FormItemEdit from "../components/Items/FormItemEdit";
+import FormPhoneNumber from "../components/Forms/FormPhoneNumber";
 import "../styles/Profile.css";
 import "../styles/CardItem.css";
 
@@ -76,6 +77,7 @@ class Profile extends Component {
   };
 
   closeForm = () => {
+    console.log("closing");
     this.setState({ displayForm: false });
   };
 
@@ -84,6 +86,13 @@ class Profile extends Component {
       (e) => e._id === id
     )[0];
     this.setState({ displayForm: true, selectedItem: selectedItem });
+  };
+
+  updateItem = (item) => {
+    const updatedItemList = [...this.state.userItems].map((x) =>
+      x._id === item._id ? item : x
+    );
+    this.setState({ userItems: updatedItemList, selectedItem: item });
   };
 
   render() {
@@ -116,10 +125,10 @@ class Profile extends Component {
           />
         )}
 
-        {this.state.selectedItem && (
+        {this.state.selectedItem && this.state.displayForm && (
           <FormItemEdit
             handleClose={this.closeForm}
-            editItem={this.editItem}
+            updateItem={this.updateItem}
             item={this.state.selectedItem}
           />
         )}
@@ -137,35 +146,11 @@ class Profile extends Component {
             </Link>
           </div>
 
-          <div className="user-contact">
-            <h4>
-              {this.state.phoneNumber
-                ? "Change phone number"
-                : "Add phone number"}
-            </h4>
-
-            <form className="form" onSubmit={this.addPhoneNumber}>
-              <div className="form-group">
-                <label className="label" htmlFor="phoneNumber">
-                  Phone number
-                </label>
-                <input
-                  className="input"
-                  id="phoneNumber"
-                  type="text"
-                  name="phoneNumber"
-                  placeholder="Add phone number"
-                  value={this.state.phoneNumber}
-                  onChange={this.handleChange}
-                />
-              </div>
-              <button className="form__button">
-                {this.state.phoneNumber
-                  ? "Change phone number"
-                  : "Add phone number"}
-              </button>
-            </form>
-          </div>
+          <FormPhoneNumber
+            handleChange={this.handleChange}
+            addPhoneNumber={this.addPhoneNumber}
+            phoneNumber={this.state.phoneNumber}
+          />
 
           {this.state.userItems.length === 0 && (
             <div className="CardItem">

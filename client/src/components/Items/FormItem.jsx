@@ -6,8 +6,8 @@ import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
 import UploadWidget from "../Untils/UploadWidget";
 import { buildFormData } from "../Untils/index";
-import FeedBack from "../SmallComponents/Feedback";
 import Message from "../SmallComponents/Message";
+import Alert from "react-bootstrap/Alert";
 
 class FormItem extends Component {
   state = {
@@ -51,8 +51,8 @@ class FormItem extends Component {
     const fd = new FormData();
     const { httpResponse, selectedFile, ...data } = this.state;
     buildFormData(fd, data);
-    fd.append("image", this.imageRef.current.files[0]);
-
+    this.imageRef.current.files[0] &&
+      fd.append("image", this.imageRef.current.files[0]);
     // for (var value of fd.values()) {
     //   console.log("-->", value);
     // } This is for check the data that submit in the form data before submitting
@@ -80,19 +80,19 @@ class FormItem extends Component {
         });
         this.locationRef.current.handleReset(); //reset the state in the child component
         this.timeoutId = setTimeout(() => {
-          this.setState({ httpResponse: null, resetLocation: false });
-        }, 2000);
+          this.setState({ httpResponse: null });
+        }, 10000);
       })
       .catch((err) => {
         this.setState({
           httpResponse: {
-            status: "failure",
+            status: "danger",
             message: "An error occured, try again later.",
           },
         });
         this.timeoutId = setTimeout(() => {
           this.setState({ httpResponse: null });
-        }, 2000);
+        }, 10000);
       });
     // In order to send back the data to the client, since there is an input type file you have to send the
     // data as formdata.
@@ -261,12 +261,8 @@ class FormItem extends Component {
               personal page.
             </Message>
           )}
-          {/* {error && <FeedBack message={error} status="failure" />} */}
           {httpResponse && (
-            <FeedBack
-              message={httpResponse.message}
-              status={httpResponse.status}
-            />
+            <Alert variant={httpResponse.status}>{httpResponse.message}</Alert>
           )}
 
           <button className="btn-submit">Add Item</button>

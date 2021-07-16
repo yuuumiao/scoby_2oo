@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "axios": "^0.21.1",
+    "bootstrap": "^5.0.2",
     "mapbox-gl": "^2.0.1",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.6.1",
     "react-dom": "^16.13.1",
     "react-mapbox-gl": "^5.1.1",
     "react-router-dom": "^5.2.0",

@@ -19,12 +19,10 @@ class Home extends React.Component {
   }
 
   addItem = (item) => {
-    // console.log("item", item);
     this.setState({ items: [...this.state.items, item] });
   };
 
   onSelectItem = (selectedItem) => {
-    // console.log(selectedItem);
     this.setState({ selectedItem: selectedItem });
   };
 

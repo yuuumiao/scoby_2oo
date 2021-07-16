@@ -54,7 +54,6 @@ class AppMap extends React.PureComponent {
             key={p._id}
             onClick={() => this.handleClick(p)}
             coordinates={p.location.coordinates}
-            scale={3}
           >
             <button>
               <img
@@ -70,6 +69,8 @@ class AppMap extends React.PureComponent {
 
   render() {
     const plantsMarkers = this.filterAndProductMarkersByCategroy("plant");
+    const kombuchaMarkers = this.filterAndProductMarkersByCategroy("kombucha");
+    const vinegarMarkers = this.filterAndProductMarkersByCategroy("vinegar");
     return (
       <Map
         // eslint-disable-next-line
@@ -87,10 +88,8 @@ class AppMap extends React.PureComponent {
         onViewportChange={this.setState}
       >
         {plantsMarkers}
-
-        {/* {kombuchaLayer}
-        {kefirLayer}
-        {vinegarLayer} */}
+        {kombuchaMarkers}
+        {vinegarMarkers}
       </Map>
     );
   }

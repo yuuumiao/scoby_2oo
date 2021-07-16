@@ -6,8 +6,7 @@ import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
 import UploadWidget from "../Untils/UploadWidget";
 import { buildFormData } from "../Untils/index";
-import FeedBack from "../SmallComponents/Feedback";
-import Message from "../SmallComponents/Message";
+import Alert from "react-bootstrap/Alert";
 
 class FormItemEdit extends Component {
   state = {
@@ -17,8 +16,8 @@ class FormItemEdit extends Component {
 
   static contextType = UserContext;
   imageRef = React.createRef();
-  formRef = React.createRef();
-  locationRef = React.createRef();
+  // formRef = React.createRef();
+  // locationRef = React.createRef();
 
   handleChange = (event) => {
     const key = event.target.name;
@@ -38,30 +37,31 @@ class FormItemEdit extends Component {
     const fd = new FormData();
     const { httpResponse, error, selectedFile, ...data } = this.state;
     buildFormData(fd, data);
+    console.log(this.imageRef.current.files[0]);
     this.imageRef.current.files[0] &&
       fd.append("image", this.imageRef.current.files[0]);
-    console.log(this.props.item._id);
+
     apiHandler
       .updateItems(this.props.item._id, fd)
       .then((res) => {
         console.log(res);
-        // this.props.updateItem(res);
-        this.formRef.current.reset();
+        this.props.updateItem(res);
+        // this.formRef.current.reset();
         this.setState({
           httpResponse: {
             status: "success",
             message: "Item successfully added.",
           },
         });
-        this.locationRef.current.handleReset(); //reset the state in the child component
+        // this.locationRef.current.handleReset(); //reset the state in the child component
         this.timeoutId = setTimeout(() => {
-          this.setState({ httpResponse: null, resetLocation: false });
+          this.setState({ httpResponse: null });
         }, 2000);
       })
       .catch((err) => {
         this.setState({
           httpResponse: {
-            status: "failure",
+            status: "danger",
             message: "An error occured, try again later.",
           },
         });
@@ -177,15 +177,14 @@ class FormItemEdit extends Component {
             >
               Change a picture to upload
             </UploadWidget>
-            {image ? (
-              <div className="upload-thumbnail-control uploaded">
+            <div className="upload-thumbnail-control uploaded">
+              <p>Preview: current picture</p>
+              {this.state.selectedFile ? (
+                <img src={this.state.selectedFile} alt="selectedImage" />
+              ) : (
                 <img src={image} alt="selectedImage" />
-              </div>
-            ) : (
-              <div className="upload-thumbnail-control empty">
-                placeholder for the picture
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           <h2 style={{ marginTop: "5%" }}>Contact information</h2>
@@ -220,20 +219,16 @@ class FormItemEdit extends Component {
           </div>
 
           {!this.context.user.phoneNumber && (
-            <Message info icon="info">
-              Want to be contacted by phone? Add your phone number in your
-              personal page.
-            </Message>
+            <Alert variant="info">
+              Want to be contacted by phone? Add your phone number
+              <Alert.Link href="#"> in your personal page.</Alert.Link>.
+            </Alert>
           )}
-          {/* {error && <FeedBack message={error} status="failure" />} */}
           {httpResponse && (
-            <FeedBack
-              message={httpResponse.message}
-              status={httpResponse.status}
-            />
+            <Alert variant={httpResponse.status}>{httpResponse.message}</Alert>
           )}
 
-          <button className="btn-submit">Add Item</button>
+          <button className="btn-submit">Update Item</button>
         </form>
       </div>
     );

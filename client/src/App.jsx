@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import FormItem from "./components/Items/FormItem";
 import FormUser from "./components/Forms/FormUser";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 class App extends Component {
   state = {

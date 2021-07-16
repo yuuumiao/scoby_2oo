@@ -52,8 +52,12 @@ router.post("/", uploader.single("image"), (req, res, next) => {
 
 //Update an item - prefix : "/api/items"
 router.patch("/:id", uploader.single("image"), (req, res, next) => {
-  console.log(req.body);
-  Item.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  const newItem = { ...req.body };
+  if (req.file) {
+    newItem.image = req.file.path;
+  }
+  console.log(req.file);
+  Item.findByIdAndUpdate(req.params.id, newItem, { new: true })
     .then((resFromApi) => {
       res.status(200).json(resFromApi);
     })

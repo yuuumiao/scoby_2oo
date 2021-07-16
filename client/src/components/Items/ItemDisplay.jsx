@@ -7,7 +7,7 @@ const ItemDisplay = (props) => {
   return (
     <div className="Item-container">
       <p onClick={handleClose} className="close-link">
-        Close
+        X
       </p>
       <div className="round-image">
         <img className="user-img" src={item.image} alt="item" />
