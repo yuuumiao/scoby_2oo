@@ -38,9 +38,12 @@ app.use(
   })
 );
 
-/*
- * Routes
- */
+// 404 Middleware
+app.use("/api/*", (req, res, next) => {
+  const error = new Error("Ressource not found.");
+  error.status = 404;
+  next(error);
+});
 
 if (process.env.NODE_ENV === "production") {
   app.use("*", (req, res, next) => {
@@ -48,6 +51,8 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "public/build/index.html"));
   });
 }
+
+/** Routes **/
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -58,20 +63,6 @@ app.use("/", indexRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/items", itemRouter);
-
-if (process.env.NODE_ENV === "production") {
-  app.use("*", (req, res, next) => {
-    // If no routes match, send them the React HTML.
-    res.sendFile(__dirname + "/public/index.html");
-  });
-}
-
-// 404 Middleware
-app.use((req, res, next) => {
-  const error = new Error("Ressource not found.");
-  error.status = 404;
-  next(error);
-});
 
 // Error handler middleware
 // If you pass an argument to your next function in any of your routes or middlewares
