@@ -28,6 +28,8 @@ app.use(express.urlencoded({ extended: false })); // Access data sent as urlEnco
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "public"))); //This is for developing
 app.use(express.static(path.join(__dirname, "public/build"))); //This is for deloying
+//if you copy the build file itself into the static foler, change the path to "public/build"
+//otherwie if you copy the files in the build file, the path should remain unchanged
 
 app.use(
   session({
