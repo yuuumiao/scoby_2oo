@@ -6,12 +6,14 @@ import { withRouter } from "react-router-dom";
 import UserContext from "../Auth/UserContext";
 import UploadWidget from "../Untils/UploadWidget";
 import { buildFormData } from "../Untils/index";
+import FormPhoneNumber from "../Forms/FormPhoneNumber";
 import Alert from "react-bootstrap/Alert";
 
 class FormItemEdit extends Component {
   state = {
     httpResponse: null,
     error: null,
+    displayFormPhone: false,
   };
 
   static contextType = UserContext;
@@ -220,8 +222,22 @@ class FormItemEdit extends Component {
 
           {!this.context.user.phoneNumber && (
             <Alert variant="info">
-              Want to be contacted by phone? Add your phone number
-              <Alert.Link href="#"> in your personal page.</Alert.Link>.
+              Want to be contacted by phone?
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  this.setState({ displayFormPhone: true });
+                }}
+              >
+                Add now
+              </button>
+              {this.state.displayFormPhone && (
+                <FormPhoneNumber
+                  handleChange={this.props.handleChange}
+                  addPhoneNumber={this.props.addPhoneNumber}
+                  phoneNumber={this.props.phoneNumber}
+                />
+              )}
             </Alert>
           )}
           {httpResponse && (

@@ -71,6 +71,8 @@ class AppMap extends React.PureComponent {
     const plantsMarkers = this.filterAndProductMarkersByCategroy("plant");
     const kombuchaMarkers = this.filterAndProductMarkersByCategroy("kombucha");
     const vinegarMarkers = this.filterAndProductMarkersByCategroy("vinegar");
+    const kefirMarkers = this.filterAndProductMarkersByCategroy("kefir");
+
     return (
       <Map
         // eslint-disable-next-line
@@ -90,6 +92,7 @@ class AppMap extends React.PureComponent {
         {plantsMarkers}
         {kombuchaMarkers}
         {vinegarMarkers}
+        {kefirMarkers}
       </Map>
     );
   }

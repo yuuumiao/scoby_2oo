@@ -3,8 +3,6 @@ import React from "react";
 function FormPhoneNumber({ handleChange, addPhoneNumber, phoneNumber }) {
   return (
     <div className="user-contact">
-      <h4>{phoneNumber ? "Change phone number" : "Add phone number"}</h4>
-
       <form className="form" onSubmit={addPhoneNumber}>
         <div className="form-group">
           <label className="label" htmlFor="phoneNumber">

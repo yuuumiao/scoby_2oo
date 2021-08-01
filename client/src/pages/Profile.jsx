@@ -39,7 +39,6 @@ class Profile extends Component {
 
   addPhoneNumber = (event) => {
     event.preventDefault();
-
     apiHandler
       .updateUserInfos({
         phoneNumber: this.state.phoneNumber,
@@ -53,10 +52,11 @@ class Profile extends Component {
           this.setState({ httpResponse: null });
         }, 1000);
       })
+
       .catch((error) => {
         this.setState({
           httpResponse: {
-            status: "failure",
+            status: "danger",
             message: "An error occured, try again later",
           },
         });
@@ -130,6 +130,9 @@ class Profile extends Component {
             handleClose={this.closeForm}
             updateItem={this.updateItem}
             item={this.state.selectedItem}
+            handleChange={this.handleChange}
+            addPhoneNumber={this.addPhoneNumber}
+            phoneNumber={this.state.phoneNumber}
           />
         )}
 

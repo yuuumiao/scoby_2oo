@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import apiHandler from "../../api/apiHandler";
 //import UserContext from "../Auth/UserContext";
 import withUser from "../Auth/withUser";
@@ -112,7 +112,12 @@ class FormUser extends Component {
           onSubmit={this.handleSubmit}
           onChange={this.handleChange}
         >
-          <h2 className="title">Edit profile</h2>
+          <div className="FormUser__headings">
+            <h2 className="title">Edit profile</h2>
+            <h2>
+              <Link to="/profile">X</Link>
+            </h2>
+          </div>
 
           <div className="round-image user-image">
             <img
