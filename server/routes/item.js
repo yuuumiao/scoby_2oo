@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Item = require("../models/Item");
 const uploader = require("../config/cloudinary");
+const requireAuth = require("../middlewares/requireAuth");
 
 //Gets all the items in the DB - prefix : "/api/items"
 router.get("/", (req, res, next) => {
@@ -27,7 +28,7 @@ router.get("/:id", (req, res, next) => {
 });
 
 //Create an item in the DB - prefix : "/api/items"
-router.post("/", uploader.single("image"), (req, res, next) => {
+router.post("/", requireAuth, uploader.single("image"), (req, res, next) => {
   const newItem = { ...req.body };
 
   if (req.file) {
@@ -51,23 +52,37 @@ router.post("/", uploader.single("image"), (req, res, next) => {
 });
 
 //Update an item - prefix : "/api/items"
-router.patch("/:id", uploader.single("image"), (req, res, next) => {
-  const newItem = { ...req.body };
-  if (req.file) {
-    newItem.image = req.file.path;
+router.patch(
+  "/:id",
+  requireAuth,
+  uploader.single("image"),
+  (req, res, next) => {
+    const newItem = { ...req.body };
+
+    Item.findById(req.params.id)
+      .then((itemDocument) => {
+        if (!itemDocument)
+          return res.status(404).json({ message: "Item not found" });
+        if (itemDocument.id_user.toString() !== req.session.currentUser) {
+          return res
+            .status(403)
+            .json({ message: "You are not allowed to update this document" });
+        }
+
+        if (req.file) newItem.image = req.file.path;
+        console.log(req.file);
+        Item.findByIdAndUpdate(req.params.id, newItem, { new: true })
+          .then((resFromApi) => {
+            res.status(200).json(resFromApi);
+          })
+          .catch((err) => next(err));
+      })
+      .catch((err) => next(err));
   }
-  console.log(req.file);
-  Item.findByIdAndUpdate(req.params.id, newItem, { new: true })
-    .then((resFromApi) => {
-      res.status(200).json(resFromApi);
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
+);
 
 //Deletes an item - prefix : "/api/items"
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", requireAuth, (req, res, next) => {
   Item.findByIdAndDelete(req.params.id)
     .then((resFromApi) => {
       res.status(200).json({ message: "deleted successfully" });

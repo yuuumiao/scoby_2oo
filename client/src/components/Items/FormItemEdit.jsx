@@ -39,14 +39,13 @@ class FormItemEdit extends Component {
     const fd = new FormData();
     const { httpResponse, error, selectedFile, ...data } = this.state;
     buildFormData(fd, data);
-    console.log(this.imageRef.current.files[0]);
+    // console.log(this.imageRef.current.files[0]);
     this.imageRef.current.files[0] &&
       fd.append("image", this.imageRef.current.files[0]);
 
     apiHandler
       .updateItems(this.props.item._id, fd)
       .then((res) => {
-        console.log(res);
         this.props.updateItem(res);
         // this.formRef.current.reset();
         this.setState({
@@ -61,6 +60,7 @@ class FormItemEdit extends Component {
         }, 2000);
       })
       .catch((err) => {
+        console.log(err);
         this.setState({
           httpResponse: {
             status: "danger",
@@ -169,7 +169,7 @@ class FormItemEdit extends Component {
 
           <div
             className="form-group"
-            style={{ display: "flex", justifyContent: "space-between" }}
+            // style={{ display: "flex", justifyContent: "space-between" }}
           >
             <UploadWidget
               ref={this.imageRef}
@@ -223,14 +223,16 @@ class FormItemEdit extends Component {
           {!this.context.user.phoneNumber && (
             <Alert variant="info">
               Want to be contacted by phone?
-              <button
+              <span
                 onClick={(e) => {
                   e.preventDefault();
-                  this.setState({ displayFormPhone: true });
+                  this.setState({
+                    displayFormPhone: !this.state.displayFormPhone,
+                  });
                 }}
               >
-                Add now
-              </button>
+                {!this.state.displayFormPhone ? "Add now" : "Add later"}
+              </span>
               {this.state.displayFormPhone && (
                 <FormPhoneNumber
                   handleChange={this.props.handleChange}

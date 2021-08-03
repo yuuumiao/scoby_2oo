@@ -26,10 +26,12 @@ app.use(logger("dev")); // This logs HTTP reponses in the console.
 app.use(express.json()); // Access data sent as json @req.body
 app.use(express.urlencoded({ extended: false })); // Access data sent as urlEncoded (standard form or postman) @req.body
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, "public"))); //This is for developing
-app.use(express.static(path.join(__dirname, "public/build"))); //This is for deloying
-//if you copy the build file itself into the static foler, change the path to "public/build"
-//otherwie if you copy the files in the build file, the path should remain unchanged
+
+//**** if you copy the build file itself into the static foler, change the path to "public/build", otherwie if you copy the files in the build file, the path should remain unchanged ****
+//This is for local developing
+// app.use(express.static(path.join(__dirname, "public")));
+//This is for deloying the build version
+app.use(express.static(path.join(__dirname, "public/build")));
 
 app.use(
   session({
@@ -40,7 +42,20 @@ app.use(
   })
 );
 
+/** Routes **/
+
+// const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const authRouter = require("./routes/auth");
+const itemRouter = require("./routes/item");
+
+// app.use("/", indexRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/items", itemRouter);
+
 // 404 Middleware
+// Middleware that handles a ressource that wasn't found.
 app.use("/api/*", (req, res, next) => {
   const error = new Error("Ressource not found.");
   error.status = 404;
@@ -53,18 +68,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "public/build/index.html"));
   });
 }
-
-/** Routes **/
-
-const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
-const authRouter = require("./routes/auth");
-const itemRouter = require("./routes/item");
-
-app.use("/", indexRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/users", usersRouter);
-app.use("/api/items", itemRouter);
 
 // Error handler middleware
 // If you pass an argument to your next function in any of your routes or middlewares

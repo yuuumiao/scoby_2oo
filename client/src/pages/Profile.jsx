@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import withUser from "../components/Auth/withUser";
 import UserContext from "../components/Auth/UserContext";
 import apiHandler from "./../api/apiHandler";
 import CardItem from "../components/Items/CardItem";
@@ -77,7 +76,6 @@ class Profile extends Component {
   };
 
   closeForm = () => {
-    console.log("closing");
     this.setState({ displayForm: false });
   };
 
@@ -185,4 +183,4 @@ class Profile extends Component {
   }
 }
 
-export default withUser(Profile);
+export default Profile;

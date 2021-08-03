@@ -205,7 +205,7 @@ class FormItem extends Component {
 
           <div
             className="form-group"
-            style={{ display: "flex", justifyContent: "space-between" }}
+            // style={{ display: "flex", justifyContent: "space-between" }}
           >
             <UploadWidget
               ref={this.imageRef}

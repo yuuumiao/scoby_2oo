@@ -1,6 +1,8 @@
 import React from "react";
+import withUser from "../Auth/withUser";
 
-function FormPhoneNumber({ handleChange, addPhoneNumber, phoneNumber }) {
+function FormPhoneNumber(props) {
+  const { handleChange, addPhoneNumber, phoneNumber, context } = props;
   return (
     <div className="user-contact">
       <form className="form" onSubmit={addPhoneNumber}>
@@ -19,11 +21,13 @@ function FormPhoneNumber({ handleChange, addPhoneNumber, phoneNumber }) {
           />
         </div>
         <button className="form__button">
-          {phoneNumber ? "Change phone number" : "Add phone number"}
+          {context.user.phoneNumber
+            ? "Change phone number"
+            : "Add phone number"}
         </button>
       </form>
     </div>
   );
 }
 
-export default FormPhoneNumber;
+export default withUser(FormPhoneNumber);

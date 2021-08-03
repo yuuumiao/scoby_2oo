@@ -1,6 +1,12 @@
 import React from "react";
 import ReactMapboxGl, { Marker } from "react-mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+
+// eslint-disable-next-line import/no-webpack-loader-syntax
+/* eslint import/no-webpack-loader-syntax: off */
+mapboxgl.workerClass =
+  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
