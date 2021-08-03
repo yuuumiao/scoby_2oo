@@ -2,7 +2,7 @@
 
 ## About the project
 
-![project screenshots](./z-project-screenshots/homepage-screenshot.png)
+![project screenshots](https://github.com/yuuumiao/scoby_2oo/blob/master/z-project-screenshots/homepage-screenshot.png)
 https://scoby-mapapp.herokuapp.com/
 This is a free-giving application where the all the visiters can access the infomations of the give-aways. All displayed on the map (in this app, the center of the map is set in Paris, but depends on the user's location, map center will display differently), as well as the icons that represent various types of the give-aways.
 
