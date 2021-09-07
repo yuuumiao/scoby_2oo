@@ -11,7 +11,7 @@ But only the registered users can add, delete, edit of the products under their 
 
 ## Documentation
 
-![A better explanantion on the application functionalities](https://hackmd.io/@T5fwmSv2QEqUg9EgZm4oCg/Bkz2EjVzt)
+https://hackmd.io/@T5fwmSv2QEqUg9EgZm4oCg/Bkz2EjVzt
 
 ## Build with
 
