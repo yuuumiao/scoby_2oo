@@ -24,8 +24,11 @@ class Profile extends Component {
     apiHandler
       .getItems()
       .then((data) => {
+        const filtered = data.filter(
+          (e) => e.id_user._id === this.context.user._id
+        );
         this.setState({
-          userItems: data,
+          userItems: filtered,
           phoneNumber: this.context.user.phoneNumber,
         });
       })
@@ -159,7 +162,7 @@ class Profile extends Component {
                 <div className="round-image">
                   <img src="/media/personal-page-empty-state.svg" alt="" />
                 </div>
-                <p>You don't have any items</p>
+                <p>You don't have any items contributing to the community</p>
               </div>
             </div>
           )}

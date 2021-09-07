@@ -91,7 +91,7 @@ class FormItemEdit extends Component {
           <p onClick={this.props.handleClose} className="close-link">
             X
           </p>
-          <h2 className="title">Add Item</h2>
+          <h2 className="title">Edit Item</h2>
 
           <div className="form-group">
             <label className="label" htmlFor="name">

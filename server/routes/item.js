@@ -7,7 +7,8 @@ const requireAuth = require("../middlewares/requireAuth");
 //Gets all the items in the DB - prefix : "/api/items"
 router.get("/", (req, res, next) => {
   Item.find()
-    .populate("id_user") // Gives us the author's id (id_user) object document instead of just the id : )
+    .select("-__v")
+    .populate("id_user", "-password -__v") //remove the unecessary info from the database "-"
     .then((resFromApi) => {
       res.status(200).json(resFromApi);
     })
@@ -19,6 +20,7 @@ router.get("/", (req, res, next) => {
 // Get one item in the DB - prefix : "/api/items"
 router.get("/:id", (req, res, next) => {
   Item.findById(req.params.id)
+    .populate("id_user", "-password -__v")
     .then((resFromApi) => {
       res.status(200).json(resFromApi);
     })
@@ -31,9 +33,7 @@ router.get("/:id", (req, res, next) => {
 router.post("/", requireAuth, uploader.single("image"), (req, res, next) => {
   const newItem = { ...req.body };
 
-  if (req.file) {
-    newItem.image = req.file.path;
-  }
+  if (req.file) newItem.image = req.file.path;
 
   console.log(req.file);
   newItem.id_user = req.session.currentUser;
@@ -41,7 +41,7 @@ router.post("/", requireAuth, uploader.single("image"), (req, res, next) => {
   Item.create(newItem)
     .then((itemDocument) => {
       itemDocument
-        .populate("id_user")
+        .populate("id_user", "-password -__v")
         .execPopulate() // Populate on .create() does not work, but we can use populate() on the document once its created !
         .then((item) => {
           res.status(201).json(item); // send the populated document.

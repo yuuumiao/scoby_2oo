@@ -203,10 +203,7 @@ class FormItem extends Component {
             ></textarea>
           </div>
 
-          <div
-            className="form-group"
-            // style={{ display: "flex", justifyContent: "space-between" }}
-          >
+          <div className="form-group">
             <UploadWidget
               ref={this.imageRef}
               name="image"

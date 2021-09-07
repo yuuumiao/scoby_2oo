@@ -1,5 +1,6 @@
 .CardItem {
-  margin-top: 50px;
+  margin-top: 1rem;
+  width: 40vw;
 }
 
 .CardItem .item {
@@ -19,7 +20,6 @@
   width: 200px;
   border-radius: 100%;
   overflow: hidden;
-  position: relative;
 }
 
 .CardItem .item-empty {
@@ -30,7 +30,7 @@
   align-items: center;
   justify-content: space-between;
   max-width: 800px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-radius: 10px;
 }
 
@@ -46,29 +46,28 @@
 }
 
 .CardItem .round-image img {
-  width: 100%;
-  height: 100%;
+  width: 20vw;
+  height: 20vw;
   object-fit: cover;
   object-position: center;
 }
 
 .CardItem .description {
-  flex: 2;
+  flex: 1;
   text-align: center;
 }
 
-.CardItem .description h2 {
+.CardItem .description {
   margin: 10px 0;
-}
-.CardItem .description h2 {
-  margin: 5px 0;
   font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+
+.CardItem p.description {
+  margin: 5px 0;
+  font-size: 0.8rem;
 }
 
 .CardItem .buttons {
   display: flex;
-}
-
-.CardItem > h3 {
-  text-align: center;
 }

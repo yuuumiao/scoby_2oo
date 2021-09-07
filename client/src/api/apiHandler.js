@@ -11,7 +11,6 @@ function errorHandler(error) {
     console.log(error.response && error.response.data);
     throw error;
   }
-  // console.log(error)
   throw error;
 }
 
